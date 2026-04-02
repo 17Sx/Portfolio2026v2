@@ -1,0 +1,8 @@
+export { AboutSection } from './AboutSection.tsx'
+export { CvSection } from './CvSection.tsx'
+export { ExperienceSection } from './ExperienceSection.tsx'
+export { HomeFooter } from './HomeFooter.tsx'
+export { ProjectsSection } from './ProjectsSection.tsx'
+export { HomeHeader } from './HomeHeader.tsx'
+export { SectionLabel } from './SectionLabel.tsx'
+export { StatsSection } from './StatsSection.tsx'
