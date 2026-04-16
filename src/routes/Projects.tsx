@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Icon } from '@iconify/react'
 import { useLanguage } from '../i18n/LanguageContext.tsx'
 
@@ -62,80 +63,141 @@ const projects: Project[] = [
   },
 ]
 
+function ProjectCard({
+  project,
+  index,
+  lang,
+}: {
+  project: Project
+  index: number
+  lang: 'en' | 'fr'
+}) {
+  const [hovered, setHovered] = useState(false)
+
+  return (
+    <div
+      className={`group relative flex flex-col justify-between p-6 sm:p-8 min-h-[220px] border border-black/10 transition-all duration-300 cursor-default overflow-hidden ${
+        hovered ? 'bg-black text-white' : 'bg-white text-black'
+      }`}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {/* Large decorative index number */}
+      <span
+        className={`pointer-events-none absolute -bottom-4 -right-2 font-mono font-semibold leading-none select-none transition-all duration-300 text-[7rem] sm:text-[9rem] ${
+          hovered ? 'text-white/8' : 'text-black/[0.04]'
+        }`}
+        aria-hidden
+      >
+        {String(index + 1).padStart(2, '0')}
+      </span>
+
+      {/* Top row */}
+      <div className="flex items-start justify-between gap-4 relative z-10">
+        <div className="flex flex-col gap-3">
+          <span
+            className={`font-mono text-[0.65rem] tracking-[0.25em] uppercase transition-colors duration-300 ${
+              hovered ? 'text-white/50' : 'text-black/35'
+            }`}
+          >
+            {String(index + 1).padStart(2, '0')} — {project.year}
+          </span>
+          <h2
+            className={`font-mono text-2xl sm:text-3xl font-semibold tracking-tight leading-none transition-colors duration-300 ${
+              hovered ? 'text-white' : 'text-black'
+            }`}
+          >
+            {project.name[lang]}
+          </h2>
+          <p
+            className={`font-mono text-xs leading-relaxed max-w-xs transition-colors duration-300 ${
+              hovered ? 'text-white/60' : 'text-black/45'
+            }`}
+          >
+            {project.description[lang]}
+          </p>
+        </div>
+      </div>
+
+      {/* Bottom row */}
+      <div className="flex items-end justify-between gap-4 mt-6 relative z-10">
+        {/* Tags */}
+        <div className="flex flex-wrap gap-1.5">
+          {project.tags.map((tag) => (
+            <span
+              key={tag}
+              className={`font-mono text-[0.6rem] tracking-widest uppercase px-2 py-0.5 border transition-colors duration-300 ${
+                hovered
+                  ? 'border-white/20 text-white/55'
+                  : 'border-black/12 text-black/40'
+              }`}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        {/* Links */}
+        <div className="flex items-center gap-2 shrink-0">
+          {project.github && (
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noreferrer"
+              className={`flex items-center justify-center w-8 h-8 border transition-all duration-200 ${
+                hovered
+                  ? 'border-white/25 text-white/60 hover:border-white hover:text-white'
+                  : 'border-black/15 text-black/40 hover:border-black hover:text-black'
+              }`}
+              title="GitHub"
+            >
+              <Icon icon="logos:github-icon" className={`w-3.5 h-3.5 ${hovered ? 'brightness-[100] invert' : ''}`} />
+            </a>
+          )}
+          {project.url && (
+            <a
+              href={project.url}
+              target="_blank"
+              rel="noreferrer"
+              className={`flex items-center justify-center w-8 h-8 border font-mono text-base transition-all duration-200 ${
+                hovered
+                  ? 'border-white/25 text-white/60 hover:border-white hover:text-white'
+                  : 'border-black/15 text-black/40 hover:border-black hover:text-black'
+              }`}
+              title="Visit"
+            >
+              ↗
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function Projects() {
   const { lang } = useLanguage()
 
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-8 pb-20 md:pb-6 h-full flex flex-col overflow-y-auto">
-      <div className="flex-1 flex flex-col justify-center">
-        <div className="flex flex-col">
-          {projects.map((project, i) => (
-            <div
-              key={project.id}
-              className="group flex items-center gap-6 border-t border-black/10 py-5 px-4 -mx-4 transition-colors duration-200 hover:bg-black/[0.03]"
-            >
-              <span className="font-mono text-xs tracking-widest text-black/25 group-hover:text-black/30 w-6 shrink-0 transition-colors duration-200">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-
-              <div className="flex flex-1 items-center justify-between gap-4 min-w-0">
-                <div className="flex flex-col gap-1 min-w-0">
-                  <span className="font-mono text-xl font-semibold text-black group-hover:text-black transition-colors duration-200">
-                    {project.name[lang]}
-                  </span>
-                  <span className="font-mono text-sm text-black/45 group-hover:text-black/50 transition-colors duration-200 truncate">
-                    {project.description[lang]}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-4 shrink-0">
-                  <div className="hidden sm:flex gap-2">
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="font-mono text-xs tracking-wide text-black/35 group-hover:text-black/40 border border-black/10 group-hover:border-black/25 px-2 py-0.5 transition-colors duration-200"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  <span className="font-mono text-xs tracking-widest text-black/30 group-hover:text-black/35 transition-colors duration-200">
-                    {project.year}
-                  </span>
-
-                  <div className="flex items-center gap-2">
-                    {project.github && (
-                      <a
-                        href={project.github}
-                        target="_blank"
-                        rel="noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="flex items-center justify-center w-8 h-8 border border-black/10 group-hover:border-black/25 text-black/35 group-hover:text-black/50 hover:!text-black hover:!bg-black/5 transition-colors duration-150"
-                        title="GitHub"
-                      >
-                        <Icon icon="logos:github-icon" className="w-3.5 h-3.5" />
-                      </a>
-                    )}
-                    {project.url && (
-                      <a
-                        href={project.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="flex items-center justify-center w-8 h-8 border border-black/10 group-hover:border-black/25 text-black/35 group-hover:text-black/50 hover:!text-black hover:!bg-black/5 transition-colors duration-150 font-mono text-sm"
-                        title="Visit"
-                      >
-                        ↗
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-          <div className="border-t border-black/10" />
+      {/* Section header */}
+      <div className="flex items-center justify-between py-5 mb-6">
+        <div className="flex items-center gap-4">
+          <span className="font-mono text-[0.6rem] tracking-[0.3em] uppercase text-black/35">
+            {lang === 'fr' ? 'Projets' : 'Projects'}
+          </span>
+          <span className="h-px w-12 bg-black/15" />
         </div>
+        <span className="font-mono text-[0.6rem] tracking-widest text-black/25">
+          {String(projects.length).padStart(2, '0')} TOTAL
+        </span>
+      </div>
+
+      {/* Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-black/8">
+        {projects.map((project, i) => (
+          <ProjectCard key={project.id} project={project} index={i} lang={lang} />
+        ))}
       </div>
     </div>
   )

@@ -6,9 +6,9 @@ export function HomeHeader() {
 
   return (
     <header className="flex flex-wrap items-baseline justify-between">
-      <span className="font-mono text-xl font-semibold uppercase tracking-widest text-black">
+      <a href="/" className="font-mono text-xl font-semibold uppercase tracking-widest text-black">
         Sx
-      </span>
+      </a>
       <div className="flex flex-wrap items-center gap-4 sm:gap-6">
         <div className="flex items-center gap-2 font-mono text-sm uppercase tracking-widest">
           <button
