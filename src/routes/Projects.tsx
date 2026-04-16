@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import { useLanguage } from '../i18n/LanguageContext.tsx'
 
@@ -67,13 +66,7 @@ export default function Projects() {
   const { lang } = useLanguage()
 
   return (
-    <div className="mx-auto max-w-5xl px-8 py-6 h-full flex flex-col">
-      <header className="flex items-baseline justify-between">
-        <Link to="/" className="font-mono text-xl font-semibold uppercase tracking-widest text-black">
-          Sx
-        </Link>
-      </header>
-
+    <div className="mx-auto max-w-5xl px-8 pb-6 h-full flex flex-col">
       <div className="flex-1 flex flex-col justify-center">
         <div className="flex flex-col">
           {projects.map((project, i) => (

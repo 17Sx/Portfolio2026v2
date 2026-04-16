@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { Icon } from '@iconify/react'
 import { useLanguage } from '../i18n/LanguageContext.tsx'
 
@@ -83,14 +82,8 @@ export default function Stack() {
   const { } = useLanguage()
 
   return (
-    <div className="mx-auto max-w-5xl px-8 py-6 h-full flex flex-col overflow-y-auto">
-      <header className="flex items-baseline justify-between">
-        <Link to="/" className="font-mono text-xl font-semibold uppercase tracking-widest text-black">
-          Sx
-        </Link>
-      </header>
-
-      <div className="flex-1 flex flex-col justify-center py-8">
+    <div className="mx-auto max-w-5xl px-8 pb-6 h-full flex flex-col overflow-y-auto">
+      <div className="flex-1 flex flex-col justify-center py-4">
         <h1 className="font-mono text-2xl font-semibold text-black mb-1">
           Stack
           <span className="ml-4 font-mono text-sm font-normal text-black/35 tracking-wide">
