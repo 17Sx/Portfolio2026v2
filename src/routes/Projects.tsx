@@ -145,13 +145,13 @@ export default function Projects() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-8 pb-20 md:pb-6 h-full flex flex-col overflow-y-auto">
+      <div className="flex-1 flex flex-col justify-center py-4">
       {/* Section header */}
       <div className="flex items-center justify-between py-5 mb-6">
         <div className="flex items-center gap-4">
           <span className="font-mono text-[0.6rem] tracking-[0.3em] uppercase text-black/35">
             {lang === 'fr' ? 'Projets' : 'Projects'}
           </span>
-          <span className="h-px w-12 bg-black/15" />
         </div>
         <span className="font-mono text-[0.6rem] tracking-widest text-black/25">
           {String(projects.length).padStart(2, '0')} TOTAL
@@ -163,6 +163,7 @@ export default function Projects() {
         {projects.map((project, i) => (
           <ProjectCard key={project.id} project={project} index={i} lang={lang} />
         ))}
+      </div>
       </div>
     </div>
   )
