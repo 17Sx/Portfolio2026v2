@@ -82,7 +82,7 @@ export default function Stack() {
   const { } = useLanguage()
 
   return (
-    <div className="mx-auto max-w-5xl px-8 pb-6 h-full flex flex-col overflow-y-auto">
+    <div className="mx-auto max-w-5xl px-4 sm:px-8 pb-20 md:pb-6 h-full flex flex-col overflow-y-auto">
       <div className="flex-1 flex flex-col justify-center py-4">
         <h1 className="font-mono text-2xl font-semibold text-black mb-1">
           Stack

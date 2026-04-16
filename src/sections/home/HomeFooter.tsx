@@ -10,7 +10,7 @@ export function HomeFooter() {
 
   return (
     <footer className="border-t border-black/15 pt-5">
-      <div className="flex flex-row justify-between">
+      <div className="flex flex-col gap-2 sm:flex-row sm:justify-between">
       <p className="font-mono text-sm tracking-wide text-black/45">
         © {new Date().getFullYear()} {t.nav.name}. {t.footer.rights}
       </p>

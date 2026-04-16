@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom'
 
 export function SideNav() {
   return (
-    <nav className="fixed right-6 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-8">
+    <nav className="hidden md:flex fixed right-6 top-1/2 -translate-y-1/2 z-20 flex-col items-center gap-8">
       <NavLink
         to="/"
         end

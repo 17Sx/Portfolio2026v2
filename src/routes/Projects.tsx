@@ -66,7 +66,7 @@ export default function Projects() {
   const { lang } = useLanguage()
 
   return (
-    <div className="mx-auto max-w-5xl px-8 pb-6 h-full flex flex-col">
+    <div className="mx-auto max-w-5xl px-4 sm:px-8 pb-20 md:pb-6 h-full flex flex-col overflow-y-auto">
       <div className="flex-1 flex flex-col justify-center">
         <div className="flex flex-col">
           {projects.map((project, i) => (
