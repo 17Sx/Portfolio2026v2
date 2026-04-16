@@ -140,7 +140,6 @@ export const copy = {
       title: 'Curriculum Vitae',
       description: 'Want to know more about my background and experience?',
       viewEn: 'View Resume (EN)',
-      viewFr: 'Voir le CV (FR)',
     },
     stack: {
       section: 'Stack',
@@ -179,7 +178,6 @@ export const copy = {
       title: 'Curriculum Vitae',
       description: 'Vous voulez en savoir plus sur mon parcours et mon expérience ?',
       viewEn: 'View Resume (EN)',
-      viewFr: 'Voir le CV (FR)',
     },
     stack: {
       section: 'Stack',

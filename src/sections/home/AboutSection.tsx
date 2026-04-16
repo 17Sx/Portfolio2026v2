@@ -5,14 +5,14 @@ export function AboutSection() {
   const { t } = useLanguage()
 
   return (
-    <section className="mt-10 border-t border-white/15 pt-10">
-      <div className="flex flex-col gap-10 md:flex-row md:gap-14">
+    <section className="border-t border-black/15 pt-5">
+      <div className="flex flex-col gap-5 md:flex-row md:gap-8">
         <SectionLabel>{t.nav.about}</SectionLabel>
-        <div className="flex min-w-0 flex-1 flex-col gap-6">
-          <p className="font-mono text-sm font-medium uppercase leading-relaxed tracking-[0.08em] text-white">
+        <div className="flex min-w-0 flex-1 flex-col gap-3">
+          <p className="font-mono text-lg font-medium leading-relaxed text-black">
             {t.about.title}
           </p>
-          <p className="font-mono text-xs uppercase leading-relaxed tracking-[0.12em] text-white/50">
+          <p className="font-mono text-base leading-relaxed text-black/65">
             {t.about.subtitle}
           </p>
         </div>

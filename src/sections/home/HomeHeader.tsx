@@ -2,27 +2,27 @@ import { SOCIAL } from '../../constants/social.ts'
 import { useLanguage } from '../../i18n/LanguageContext.tsx'
 
 export function HomeHeader() {
-  const { t, lang, setLang } = useLanguage()
+  const { lang, setLang } = useLanguage()
 
   return (
     <header className="flex flex-wrap items-baseline justify-between">
-      <span className="font-mono text-base font-medium uppercase tracking-[0.2em] text-white sm:text-lg">
-        {t.nav.name}
+      <span className="font-mono text-xl font-semibold uppercase tracking-widest text-black">
+        Sx
       </span>
       <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-        <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em]">
+        <div className="flex items-center gap-2 font-mono text-sm uppercase tracking-widest">
           <button
             type="button"
             onClick={() => setLang('en')}
-            className={lang === 'en' ? 'text-white' : 'text-white/40 hover:text-white/70'}
+            className={lang === 'en' ? 'text-black' : 'text-black/40 hover:text-black/70'}
           >
             EN
           </button>
-          <span className="text-white/25">/</span>
+          <span className="text-black/25">/</span>
           <button
             type="button"
             onClick={() => setLang('fr')}
-            className={lang === 'fr' ? 'text-white' : 'text-white/40 hover:text-white/70'}
+            className={lang === 'fr' ? 'text-black' : 'text-black/40 hover:text-black/70'}
           >
             FR
           </button>
@@ -31,7 +31,7 @@ export function HomeHeader() {
           href={SOCIAL.github}
           target="_blank"
           rel="noreferrer"
-          className="font-mono text-sm uppercase tracking-[0.15em] text-white/50 hover:text-white/80"
+          className="font-mono text-base tracking-wide text-black/55 hover:text-black/80"
         >
           @17Sx
         </a>
@@ -39,3 +39,4 @@ export function HomeHeader() {
     </header>
   )
 }
+

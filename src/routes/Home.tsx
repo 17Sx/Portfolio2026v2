@@ -4,20 +4,20 @@ import {
   ExperienceSection,
   HomeFooter,
   HomeHeader,
-  ProjectsSection,
   StatsSection,
 } from '../sections/home/index.ts'
 
 export default function Home() {
   return (
-    <div className="mx-auto max-w-5xl px-8 py-8">
+    <div className="mx-auto max-w-5xl px-8 py-6 h-full flex flex-col">
       <HomeHeader />
-      <AboutSection />
-      <StatsSection />
-      <ExperienceSection />
-      <ProjectsSection />
-      <CvSection />
-      <HomeFooter />
+      <div className="flex-1 flex flex-col justify-between">
+        <AboutSection />
+        <StatsSection />
+        <ExperienceSection />
+        <CvSection />
+        <HomeFooter />
+      </div>
     </div>
   )
 }

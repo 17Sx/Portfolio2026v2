@@ -12,9 +12,9 @@ export function LinkListSection({
   lang: Lang
 }) {
   return (
-    <section id={id} className="mt-14 border-t border-white/15 pt-10">
+    <section id={id} className="mt-14 border-t border-black/15 pt-10">
       <div className="flex flex-col gap-10 md:flex-row md:gap-14">
-        <p className="shrink-0 font-mono text-[10px] uppercase tracking-[0.35em] text-white/40 md:w-36">
+        <p className="shrink-0 font-mono text-[10px] uppercase tracking-[0.35em] text-black/40 md:w-36">
           <span>{sectionLabel}</span>
         </p>
         <ul className="flex min-w-0 flex-1 list-none flex-col gap-3 p-0">
@@ -30,12 +30,12 @@ export function LinkListSection({
                     href={item.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-white/55 underline decoration-white/20 underline-offset-4 transition-colors hover:text-white"
+                    className="text-black/55 underline decoration-black/20 underline-offset-4 transition-colors hover:text-black"
                   >
                     {label}
                   </a>
                 ) : (
-                  <span className="text-white/50">{label}</span>
+                  <span className="text-black/50">{label}</span>
                 )}
               </li>
             )
