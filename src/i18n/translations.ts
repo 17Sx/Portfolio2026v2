@@ -24,21 +24,21 @@ export const experienceEntries: ExperienceEntry[] = [
       fr: 'PMP (Palm Managing Project)',
     },
     role: { en: 'Full-stack developer', fr: 'Développeur full-stack' },
-    period: { en: '2024 — present', fr: '2024 — présent' },
+    period: { en: '2024 - present', fr: '2024 - présent' },
     url: null,
   },
   {
     id: 'altiora',
     company: { en: 'Altiora', fr: 'Altiora' },
     role: { en: 'Founder & developer', fr: 'Fondateur & développeur' },
-    period: { en: '2025 — Present', fr: '2025 — Présent' },
+    period: { en: '2025 - Present', fr: '2025 - Présent' },
     url: 'https://altiora.pro',
   },
   {
     id: 'freelance',
     company: { en: 'Freelance', fr: 'Freelance' },
     role: { en: 'Full-stack developer', fr: 'Développeur full-stack' },
-    period: { en: '2023 — Present', fr: '2023 — Présent' },
+    period: { en: '2023 - Present', fr: '2023 - Présent' },
     url: null,
   },
 ]
@@ -47,20 +47,20 @@ export const projectItems: ListedItem[] = [
   { id: 'altiora', en: 'Altiora', fr: 'Altiora', url: 'https://altiora.pro' },
   {
     id: 'bkm',
-    en: 'BKM Poker — 2025',
-    fr: 'BKM Poker — 2025',
+    en: 'BKM Poker (2025)',
+    fr: 'BKM Poker (2025)',
     url: 'https://bkm-nine.vercel.app/',
   },
   {
     id: 'yh',
-    en: 'YH Trading — 2025',
-    fr: 'YH Trading — 2025',
+    en: 'YH Trading (2025)',
+    fr: 'YH Trading (2025)',
     url: 'https://yhtrading.vercel.app',
   },
   {
     id: 'portfolio24',
-    en: 'First Portfolio — 2024',
-    fr: 'Premier Portfolio — 2024',
+    en: 'First Portfolio (2024)',
+    fr: 'Premier Portfolio (2024)',
     url: 'https://17sx.github.io/Portfolio_2024/',
   },
 ]
@@ -133,7 +133,7 @@ export const copy = {
     },
     stats: {
       section: 'Stats',
-      quote: 'Always grinding — 24/7, no breaks, no excuses.',
+      quote: 'Always grinding, 24/7, no breaks, no excuses.',
       githubProfile: 'GitHub profile',
     },
     cv: {
@@ -171,7 +171,7 @@ export const copy = {
     },
     stats: {
       section: 'Stats',
-      quote: 'Always grinding — 24/7, no breaks, no excuses.',
+      quote: 'Always grinding, 24/7, no breaks, no excuses.',
       githubProfile: 'Profil GitHub',
     },
     cv: {
