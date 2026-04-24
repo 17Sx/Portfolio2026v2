@@ -2,7 +2,8 @@ import { useLanguage } from '../../i18n/LanguageContext.tsx'
 import { SectionLabel } from './SectionLabel.tsx'
 
 export function CvSection() {
-  const { t } = useLanguage()
+  const { t, lang } = useLanguage()
+  const cvHref = lang === 'fr' ? '/cv_fr.pdf' : '/cv_en.pdf'
 
   return (
     <section id="cv" className="border-t border-black/15 pt-5">
@@ -14,12 +15,12 @@ export function CvSection() {
           </p>
           <div className="flex flex-wrap gap-3 font-mono text-sm uppercase tracking-widest">
             <a
-              href="/cv_en.pdf"
+              href={cvHref}
               target="_blank"
               rel="noreferrer"
               className="border border-black/20 px-4 py-2 text-black/75 hover:border-black/40 hover:text-black"
             >
-              {t.cv.viewEn}
+              {t.cv.viewResume}
             </a>
           </div>
         </div>

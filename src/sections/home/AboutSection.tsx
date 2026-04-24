@@ -15,6 +15,9 @@ export function AboutSection() {
           <p className="font-mono text-base leading-relaxed text-black/65">
             {t.about.subtitle}
           </p>
+          <p className="font-mono text-sm leading-relaxed text-black/55 md:text-base">
+            {t.about.detail}
+          </p>
         </div>
       </div>
     </section>

@@ -18,6 +18,13 @@ export type ExperienceEntry = {
 
 export const experienceEntries: ExperienceEntry[] = [
   {
+    id: 'altiora',
+    company: { en: 'Altiora', fr: 'Altiora' },
+    role: { en: 'Founder & developer', fr: 'Fondateur & développeur' },
+    period: { en: '2025 - Present', fr: '2025 - Présent' },
+    url: 'https://altiora.pro',
+  },
+  {
     id: 'pmp',
     company: {
       en: 'PMP (Palm Managing Project)',
@@ -26,13 +33,6 @@ export const experienceEntries: ExperienceEntry[] = [
     role: { en: 'Full-stack developer', fr: 'Développeur full-stack' },
     period: { en: '2024 - present', fr: '2024 - présent' },
     url: null,
-  },
-  {
-    id: 'altiora',
-    company: { en: 'Altiora', fr: 'Altiora' },
-    role: { en: 'Founder & developer', fr: 'Fondateur & développeur' },
-    period: { en: '2025 - Present', fr: '2025 - Présent' },
-    url: 'https://altiora.pro',
   },
   {
     id: 'freelance',
@@ -124,6 +124,8 @@ export const copy = {
       title: "I'm Sx, a developer who enjoys building performant interfaces.",
       subtitle:
         'Passionate about entrepreneurship and coding, I try to combine both. I want to give myself the means to make a living from what I love.',
+      detail:
+        "Day to day I'm a full-stack dev at PMP : internal admin tools, integrations, and products. I like interfaces that feel fast, schemas that stay honest, and code that actually reaches production.",
     },
     experience: {
       section: 'Experience',
@@ -139,12 +141,21 @@ export const copy = {
     cv: {
       title: 'Curriculum Vitae',
       description: 'Want to know more about my background and experience?',
-      viewEn: 'View Resume (EN)',
+      viewResume: 'View my resume',
     },
     stack: {
       section: 'Stack',
+      subtitle: 'What I use',
       narrative:
         'My main stack is Next.js with Tailwind CSS for styling. For the database I use PostgreSQL on Neon with Drizzle as an ORM; DataGrip covers database management. Last but not least, Cursor is my IDE for shipping projects. ♥',
+      tags: {
+        CORE: 'Core',
+        FRAMEWORKS: 'Frameworks',
+        TOOLS: 'Tools',
+        PLATFORMS: 'Platforms',
+        SOFTWARE: 'Software',
+        'DEV OPS': 'DevOps',
+      } as const,
     },
     footer: { rights: 'All rights reserved.' },
     notFound: {
@@ -161,9 +172,10 @@ export const copy = {
       title: 'Je suis Sx, un développeur qui aime créer des interfaces performantes.',
       subtitle:
         "Passionné par l'entrepreneuriat et le code, j'essaie de combiner les deux. Je veux me donner les moyens de vivre de ce que j'aime.",
-      technologies: 'Voici quelques technologies avec lesquelles je travaille.',
+      detail:
+          "Au quotidien je suis full-stack chez PMP : outils d’admin internes, intégrations, et des produits. J’aime les interfaces qui réagissent vite, les modèles de données propres, et le code qui finit vraiment en prod.",
     },
-    experience: {
+      experience: {
       section: 'Expérience',
     },
     projects: {
@@ -177,12 +189,21 @@ export const copy = {
     cv: {
       title: 'Curriculum Vitae',
       description: 'Vous voulez en savoir plus sur mon parcours et mon expérience ?',
-      viewEn: 'View Resume (EN)',
+      viewResume: 'Voir mon CV',
     },
     stack: {
       section: 'Stack',
+      subtitle: 'Ce que j’utilise',
       narrative:
         'Ma stack principale, c’est Next.js avec Tailwind CSS pour le style. Côté données : PostgreSQL sur Neon, Drizzle en ORM ; DataGrip pour l’administration des bases. Enfin, Cursor est mon IDE pour livrer des projets. ♥',
+      tags: {
+        CORE: 'Base',
+        FRAMEWORKS: 'Frameworks',
+        TOOLS: 'Outils',
+        PLATFORMS: 'Plateformes',
+        SOFTWARE: 'Logiciels',
+        'DEV OPS': 'DevOps',
+      } as const,
     },
     footer: { rights: 'Tous droits réservés.' },
     notFound: {
