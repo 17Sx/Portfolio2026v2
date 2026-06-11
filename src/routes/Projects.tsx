@@ -34,6 +34,18 @@ const projects: Project[] = [
     github: 'https://github.com/AltioraPro/altiora',
   },
   {
+    id: 'ata',
+    name: { en: 'ATA', fr: 'ATA' },
+    description: {
+      en: 'Altiora Trading API: backend service for trading autojournaling. Discontinued due to MetaAPI and infrastructure costs.',
+      fr: 'Altiora Trading API : service backend pour l’autojournaling trading. Projet abandonné (coûts MetaAPI et infra).',
+    },
+    tech: ['TypeScript', 'Drizzle ORM', 'Bun', 'MetaAPI'],
+    year: '2025',
+    url: null,
+    github: 'https://github.com/AltioraPro/ATA',
+  },
+  {
     id: 'bkm',
     name: { en: 'BKM Poker', fr: 'BKM Poker' },
     description: {
@@ -90,18 +102,6 @@ const projects: Project[] = [
     year: '2025',
     url: 'https://ulabs-dentiste.pmp.fr/',
     github: null,
-  },
-  {
-    id: 'portfolio24',
-    name: { en: 'Portfolio 2024', fr: 'Portfolio 2024' },
-    description: {
-      en: 'This project showcases my first personal website portfolio, highlighting my skills and experiences as a developer and my first step to learn Three.js.',
-      fr: 'Premier site portfolio : compétences, expériences, et première approche de Three.js.',
-    },
-    tech: ['HTML', 'SCSS', 'Three.js', 'JavaScript'],
-    year: '2024',
-    url: 'https://17sx.github.io/Portfolio_2024/',
-    github: 'https://github.com/17Sx/Portfolio_2024',
   },
 ]
 
