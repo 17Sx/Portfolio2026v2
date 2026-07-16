@@ -3,8 +3,8 @@ import { NavLink } from 'react-router-dom'
 const linkClass = ({ isActive }: { isActive: boolean }) =>
   [
     'inline-block py-1 font-mono text-sm uppercase tracking-[0.14em] transition-colors [writing-mode:vertical-rl]',
-    'outline-none focus-visible:underline focus-visible:decoration-black/35 focus-visible:underline-offset-4',
-    isActive ? 'font-medium text-black' : 'text-black/50 hover:text-black/80',
+    'outline-none focus-visible:underline focus-visible:decoration-ink/35 focus-visible:underline-offset-4',
+    isActive ? 'font-medium text-ink' : 'text-ink/50 hover:text-ink/80',
   ].join(' ')
 
 export function SideNav() {

@@ -120,10 +120,10 @@ function ProjectCard({
       : 'Internal repo, no public link.'
 
   return (
-    <div className="relative flex flex-col justify-between min-h-[180px] sm:min-h-[200px] p-6 sm:p-8 border border-black/10 bg-white cursor-default overflow-hidden">
+    <div className="relative flex flex-col justify-between min-h-[180px] sm:min-h-[200px] p-6 sm:p-8 border border-ink/10 bg-paper cursor-default overflow-hidden">
       {/* Large decorative index number */}
       <span
-        className="pointer-events-none absolute -bottom-3 -right-1 font-mono font-semibold leading-none select-none text-black/[0.04] text-[5rem] sm:text-[6rem]"
+        className="pointer-events-none absolute -bottom-3 -right-1 font-mono font-semibold leading-none select-none text-ink/[0.04] text-[5rem] sm:text-[6rem]"
         aria-hidden
       >
         {String(index + 1).padStart(2, '0')}
@@ -132,13 +132,13 @@ function ProjectCard({
       {/* Top row */}
       <div className="flex items-start justify-between gap-4 relative z-10">
         <div className="flex flex-col gap-2.5 min-w-0">
-          <span className="font-mono text-[0.55rem] tracking-[0.22em] uppercase text-black/35">
+          <span className="font-mono text-[0.55rem] tracking-[0.22em] uppercase text-ink/35">
             {String(index + 1).padStart(2, '0')} · {project.year}
           </span>
-          <h2 className="font-mono text-xl sm:text-2xl font-semibold tracking-tight leading-tight text-black">
+          <h2 className="font-mono text-xl sm:text-2xl font-semibold tracking-tight leading-tight text-ink">
             {project.name[lang]}
           </h2>
-          <p className="font-mono text-[0.7rem] leading-relaxed text-black/45 line-clamp-5">
+          <p className="font-mono text-[0.7rem] leading-relaxed text-ink/45 line-clamp-5">
             {project.description[lang]}
           </p>
         </div>
@@ -150,7 +150,7 @@ function ProjectCard({
           {project.tech.map((tag) => (
             <span
               key={tag}
-              className="font-mono text-[0.52rem] tracking-wider uppercase px-2 py-0.5 border border-black/10 text-black/40"
+              className="font-mono text-[0.52rem] tracking-wider uppercase px-2 py-0.5 border border-ink/10 text-ink/40"
             >
               {tag}
             </span>
@@ -161,7 +161,7 @@ function ProjectCard({
         <div className="flex items-center gap-2 shrink-0">
           {project.githubLocked && (
             <span
-              className="flex items-center justify-center w-8 h-8 shrink-0 border border-dashed border-black/25 text-black/45 cursor-default"
+              className="flex items-center justify-center w-8 h-8 shrink-0 border border-dashed border-ink/25 text-ink/45 cursor-default"
               title={privateRepoHint}
               role="img"
               aria-label={privateRepoHint}
@@ -174,7 +174,7 @@ function ProjectCard({
               href={project.github}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center justify-center w-8 h-8 border border-black/15 text-black/40 transition-all duration-200 hover:border-black hover:text-black hover:scale-105 active:scale-95"
+              className="flex items-center justify-center w-8 h-8 border border-ink/15 text-ink/40 transition-all duration-200 hover:border-ink hover:text-ink hover:scale-105 active:scale-95"
               title="GitHub"
             >
               <Icon icon="logos:github-icon" className="w-3.5 h-3.5" />
@@ -185,7 +185,7 @@ function ProjectCard({
               href={project.url}
               target="_blank"
               rel="noreferrer"
-              className="flex items-center justify-center w-8 h-8 border border-black/15 text-black/40 font-mono text-base transition-all duration-200 hover:border-black hover:text-black hover:scale-105 active:scale-95"
+              className="flex items-center justify-center w-8 h-8 border border-ink/15 text-ink/40 font-mono text-base transition-all duration-200 hover:border-ink hover:text-ink hover:scale-105 active:scale-95"
               title={lang === 'fr' ? 'Voir la démo' : 'Visit demo'}
             >
               ↗
@@ -207,17 +207,17 @@ export default function Projects() {
           {/* Section header */}
           <div className="flex items-center justify-between py-2 mb-2 md:mb-3">
             <div className="flex items-center gap-3">
-              <span className="font-mono text-[0.55rem] tracking-[0.28em] uppercase text-black/35">
+              <span className="font-mono text-[0.55rem] tracking-[0.28em] uppercase text-ink/35">
                 {lang === 'fr' ? 'Projets' : 'Projects'}
               </span>
             </div>
-            <span className="font-mono text-[0.55rem] tracking-widest text-black/25">
+            <span className="font-mono text-[0.55rem] tracking-widest text-ink/25">
               {String(projects.length).padStart(2, '0')} TOTAL
             </span>
           </div>
 
           {/* Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-black/8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-ink/8">
             {projects.map((project, i) => (
               <ProjectCard key={project.id} project={project} index={i} lang={lang} />
             ))}

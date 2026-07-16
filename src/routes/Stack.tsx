@@ -79,7 +79,7 @@ const categories: Category[] = [
 
 function SkillBadge({ skill }: { skill: Skill }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded border border-black/15 px-2.5 font-mono text-sm text-black/70">
+    <span className="inline-flex items-center gap-1.5 rounded border border-ink/15 px-2.5 font-mono text-sm text-ink/70">
       {skill.icon && (
         <Icon icon={skill.icon} className="h-3.5 w-3.5 shrink-0" />
       )}
@@ -91,7 +91,7 @@ function SkillBadge({ skill }: { skill: Skill }) {
 function StackIntroBadges({ lang }: { lang: Lang }) {
   const s = introStack
   const className =
-    'mt-4 mb-8 font-mono text-sm leading-relaxed text-black/60 max-w-2xl'
+    'mt-4 mb-8 font-mono text-sm leading-relaxed text-ink/60 max-w-2xl'
 
   if (lang === 'fr') {
     return (
@@ -122,9 +122,9 @@ export default function Stack() {
   return (
     <div className="mx-auto max-w-5xl px-4 sm:px-8 pb-20 md:pb-6 h-full flex flex-col overflow-y-auto">
       <div className="flex-1 flex flex-col justify-center py-4">
-        <h1 className="font-mono text-2xl font-semibold text-black mb-1">
+        <h1 className="font-mono text-2xl font-semibold text-ink mb-1">
           {t.stack.section}
-          <span className="ml-4 font-mono text-sm font-normal text-black/35 tracking-wide">
+          <span className="ml-4 font-mono text-sm font-normal text-ink/35 tracking-wide">
             {t.stack.subtitle}
           </span>
         </h1>
@@ -138,7 +138,7 @@ export default function Stack() {
               tagKey in t.stack.tags ? t.stack.tags[tagKey] : cat.tag
             return (
             <div key={cat.tag} className="flex flex-col gap-2">
-              <span className="font-mono text-xs text-black/30 tracking-widest">
+              <span className="font-mono text-xs text-ink/30 tracking-widest">
                 &lt;{tagLabel}/&gt;
               </span>
               <div className="flex flex-wrap gap-2">

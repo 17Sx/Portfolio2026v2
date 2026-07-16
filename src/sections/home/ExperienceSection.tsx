@@ -5,12 +5,12 @@ export function ExperienceSection() {
   const { t, lang } = useLanguage()
 
   return (
-    <section id="experience" className="border-t border-black/15 pt-5">
+    <section id="experience" className="border-t border-ink/15 pt-5">
       <div className="flex flex-col gap-5 md:flex-row md:gap-8">
-        <p className="shrink-0 font-mono text-sm uppercase tracking-widest text-black/50 md:w-36">
+        <p className="shrink-0 font-mono text-sm uppercase tracking-widest text-ink/50 md:w-36">
           {t.experience.section}
         </p>
-        <div className="min-w-0 flex-1 divide-y divide-black/10">
+        <div className="min-w-0 flex-1 divide-y divide-ink/10">
           {experienceEntries.map((entry) => {
             const company = entry.company[lang]
             const role = entry.role[lang]
@@ -20,12 +20,12 @@ export function ExperienceSection() {
                 href={entry.url}
                 target="_blank"
                 rel="noreferrer"
-                className="font-mono text-base font-semibold tracking-wide text-black underline-offset-4 transition-colors underline"
+                className="font-mono text-base font-semibold tracking-wide text-ink underline-offset-4 transition-colors underline"
               >
                 {company}
               </a>
             ) : (
-              <span className="font-mono text-base font-semibold tracking-wide text-black">
+              <span className="font-mono text-base font-semibold tracking-wide text-ink">
                 {company}
               </span>
             )
@@ -36,11 +36,11 @@ export function ExperienceSection() {
               >
                 <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
                   {companyEl}
-                  <span className="font-mono text-base leading-relaxed text-black/55">
+                  <span className="font-mono text-base leading-relaxed text-ink/55">
                     {role}
                   </span>
                 </div>
-                <span className="shrink-0 font-mono text-sm tracking-wide text-black/45 sm:text-right">
+                <span className="shrink-0 font-mono text-sm tracking-wide text-ink/45 sm:text-right">
                   {period}
                 </span>
               </div>
