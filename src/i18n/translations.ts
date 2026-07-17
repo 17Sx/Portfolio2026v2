@@ -58,10 +58,10 @@ export const projectItems: ListedItem[] = [
     url: 'https://yhtrading.vercel.app',
   },
   {
-    id: 'portfolio24',
-    en: 'First Portfolio (2024)',
-    fr: 'Premier Portfolio (2024)',
-    url: 'https://17sx.github.io/Portfolio_2024/',
+    id: 'ghostnet',
+    en: 'ghostnet_socket (2026)',
+    fr: 'ghostnet_socket (2026)',
+    url: 'https://github.com/17Sx/ghostnet_socket',
   },
 ]
 
@@ -73,55 +73,47 @@ export type StackCategory = {
 
 export const stackCategories: StackCategory[] = [
   {
-    id: 'core',
-    label: { en: 'Core', fr: 'Base' },
-    items: [
-      'JavaScript',
-      'TypeScript',
-      'HTML',
-      'CSS',
-      'SQL',
-      'PostgreSQL',
-    ],
+    id: 'languages',
+    label: { en: 'Languages', fr: 'Langages' },
+    items: ['JavaScript', 'TypeScript', 'Python', 'SQL'],
   },
   {
-    id: 'frameworks',
-    label: { en: 'Frameworks', fr: 'Frameworks' },
-    items: [
-      'Express',
-      'Tailwind CSS',
-      'TanStack Query',
-      'React Email',
-      'Better Auth',
-    ],
+    id: 'frontend',
+    label: { en: 'Frontend', fr: 'Frontend' },
+    items: ['React', 'Next.js', 'Tailwind CSS', 'TanStack Query', 'React Email'],
   },
   {
-    id: 'tools',
-    label: { en: 'Tools', fr: 'Outils' },
-    items: ['Drizzle', 'Prisma', 'Neon'],
+    id: 'backend',
+    label: { en: 'Backend', fr: 'Backend' },
+    items: ['Node.js', 'Express', 'oRPC', 'tRPC', 'Better Auth'],
   },
   {
-    id: 'platforms',
-    label: { en: 'Platforms', fr: 'Plateformes' },
-    items: ['GitHub', 'Vercel', 'Ubuntu'],
+    id: 'data',
+    label: { en: 'Data', fr: 'Données' },
+    items: ['PostgreSQL', 'Drizzle', 'Neon'],
+  },
+  {
+    id: 'ml',
+    label: { en: 'ML & Vision', fr: 'ML & Vision' },
+    items: ['PyTorch', 'PaddleOCR', 'pdfplumber', 'ONNX'],
+  },
+  {
+    id: 'infra',
+    label: { en: 'Infra', fr: 'Infra' },
+    items: ['Docker', 'Linux', 'Ubuntu', 'GitHub', 'GitHub Actions', 'Vercel'],
   },
   {
     id: 'software',
     label: { en: 'Software', fr: 'Logiciels' },
     items: ['Cursor', 'Postman'],
   },
-  {
-    id: 'devops',
-    label: { en: 'DevOps', fr: 'DevOps' },
-    items: ['tRPC', 'GitHub Actions (CI/CD)'],
-  },
 ]
 
 export const copy = {
   en: {
-    nav: { name: 'Sx', cv: 'CV', about: 'About' },
+    nav: { name: 'Noa', cv: 'CV', about: 'About' },
     about: {
-      title: "I'm Sx, a developer who enjoys building performant interfaces.",
+      title: 'I\'m "Noa", a full-stack developer.',
       subtitle:
         'Passionate about entrepreneurship and coding, I try to combine both. I want to give myself the means to make a living from what I love.',
       detail:
@@ -135,7 +127,6 @@ export const copy = {
     },
     stats: {
       section: 'Stats',
-      quote: 'Always grinding, 24/7, no breaks, no excuses.',
       githubProfile: 'GitHub profile',
     },
     cv: {
@@ -149,12 +140,13 @@ export const copy = {
       narrative:
         'My main stack is Next.js with Tailwind CSS for styling. For the database I use PostgreSQL on Neon with Drizzle as an ORM; DataGrip covers database management. Last but not least, Cursor is my IDE for shipping projects. ♥',
       tags: {
-        CORE: 'Core',
-        FRAMEWORKS: 'Frameworks',
-        TOOLS: 'Tools',
-        PLATFORMS: 'Platforms',
+        LANGUAGES: 'Languages',
+        FRONTEND: 'Frontend',
+        BACKEND: 'Backend',
+        DATA: 'Data',
+        ML: 'ML & Vision (learning)',
+        INFRA: 'Infra',
         SOFTWARE: 'Software',
-        'DEV OPS': 'DevOps',
       } as const,
     },
     footer: { rights: 'All rights reserved.' },
@@ -167,9 +159,9 @@ export const copy = {
     },
   },
   fr: {
-    nav: { name: 'Sx', cv: 'CV', about: 'À propos' },
+    nav: { name: 'Noa', cv: 'CV', about: 'À propos' },
     about: {
-      title: 'Je suis Sx, un développeur qui aime créer des interfaces performantes.',
+      title: 'Je suis "Noa", développeur full-stack.',
       subtitle:
         "Passionné par l'entrepreneuriat et le code, j'essaie de combiner les deux. Je veux me donner les moyens de vivre de ce que j'aime.",
       detail:
@@ -183,7 +175,6 @@ export const copy = {
     },
     stats: {
       section: 'Stats',
-      quote: 'Always grinding, 24/7, no breaks, no excuses.',
       githubProfile: 'Profil GitHub',
     },
     cv: {
@@ -197,12 +188,13 @@ export const copy = {
       narrative:
         'Ma stack principale, c’est Next.js avec Tailwind CSS pour le style. Côté données : PostgreSQL sur Neon, Drizzle en ORM ; DataGrip pour l’administration des bases. Enfin, Cursor est mon IDE pour livrer des projets. ♥',
       tags: {
-        CORE: 'Base',
-        FRAMEWORKS: 'Frameworks',
-        TOOLS: 'Outils',
-        PLATFORMS: 'Plateformes',
+        LANGUAGES: 'Langages',
+        FRONTEND: 'Frontend',
+        BACKEND: 'Backend',
+        DATA: 'Données',
+        ML: 'ML & Vision (en apprentissage)',
+        INFRA: 'Infra',
         SOFTWARE: 'Logiciels',
-        'DEV OPS': 'DevOps',
       } as const,
     },
     footer: { rights: 'Tous droits réservés.' },

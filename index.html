@@ -4,14 +4,32 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/Logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Sx - Portfolio" />
+    <meta name="description" content="Noa — full-stack developer. Web apps with React, Next.js and Node.js, plus a bit of Python, OCR and ML." />
+    <meta name="author" content="Noa" />
     <meta name="theme-color" content="#ffffff" />
-    <title>Sx - Portfolio</title>
+    <title>Noa — Full-stack developer</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Noa — Full-stack developer" />
+    <meta property="og:description" content="Full-stack developer. Web apps with React, Next.js and Node.js, plus a bit of Python, OCR and ML." />
+    <meta property="og:image" content="/Logo.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Noa — Full-stack developer" />
+    <meta name="twitter:description" content="Full-stack developer. Web apps with React, Next.js and Node.js, plus a bit of Python, OCR and ML." />
+    <meta name="twitter:image" content="/Logo.png" />
+
     <script>
       try {
         var t = localStorage.getItem('theme')
         if (t === 'dark' || (t !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches)) {
           document.documentElement.classList.add('dark')
+        }
+        var l = localStorage.getItem('portfolio-lang')
+        if (l === 'fr' || l === 'en') {
+          document.documentElement.lang = l
         }
       } catch (e) {}
     </script>

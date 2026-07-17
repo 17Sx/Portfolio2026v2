@@ -23,42 +23,60 @@ type Category = {
 
 const categories: Category[] = [
   {
-    tag: 'CORE',
+    tag: 'LANGUAGES',
     items: [
       { name: 'JavaScript', icon: 'logos:javascript' },
       { name: 'TypeScript', icon: 'logos:typescript-icon' },
-      { name: 'HTML', icon: 'logos:html-5' },
-      { name: 'CSS', icon: 'logos:css-3' },
+      { name: 'Python', icon: 'logos:python' },
       { name: 'SQL', icon: 'mdi:database' },
-      { name: 'PostgreSQL', icon: 'logos:postgresql' },
     ],
   },
   {
-    tag: 'FRAMEWORKS',
+    tag: 'FRONTEND',
     items: [
-      { name: 'Next.js', icon: 'logos:nextjs-icon' },
       { name: 'React', icon: 'logos:react' },
-      { name: 'Express', icon: 'logos:express' },
+      { name: 'Next.js', icon: 'logos:nextjs-icon' },
       { name: 'Tailwind CSS', icon: 'logos:tailwindcss-icon' },
       { name: 'TanStack Query', icon: 'logos:react-query-icon' },
       { name: 'React Email', icon: 'logos:react' },
+    ],
+  },
+  {
+    tag: 'BACKEND',
+    items: [
+      { name: 'Node.js', icon: 'logos:nodejs-icon' },
+      { name: 'Express', icon: 'logos:express' },
+      { name: 'oRPC', icon: 'mdi:api' },
+      { name: 'tRPC', icon: 'logos:trpc' },
       { name: 'Better Auth', icon: 'mdi:lock' },
     ],
   },
   {
-    tag: 'TOOLS',
+    tag: 'DATA',
     items: [
+      { name: 'PostgreSQL', icon: 'logos:postgresql' },
       { name: 'Drizzle', icon: 'simple-icons:drizzle' },
-      { name: 'Prisma', icon: 'logos:prisma' },
       { name: 'Neon', icon: 'logos:neon-icon' },
     ],
   },
   {
-    tag: 'PLATFORMS',
+    tag: 'ML',
     items: [
-      { name: 'GitHub', icon: 'logos:github-icon' },
-      { name: 'Vercel', icon: 'logos:vercel-icon' },
+      { name: 'PyTorch', icon: 'logos:pytorch-icon' },
+      { name: 'PaddleOCR', icon: 'mdi:ocr' },
+      { name: 'pdfplumber', icon: 'mdi:file-pdf-box' },
+      { name: 'ONNX', icon: 'simple-icons:onnx' },
+    ],
+  },
+  {
+    tag: 'INFRA',
+    items: [
+      { name: 'Docker', icon: 'logos:docker-icon' },
+      { name: 'Linux', icon: 'logos:linux-tux' },
       { name: 'Ubuntu', icon: 'logos:ubuntu' },
+      { name: 'GitHub', icon: 'logos:github-icon' },
+      { name: 'GitHub Actions', icon: 'logos:github-actions' },
+      { name: 'Vercel', icon: 'logos:vercel-icon' },
     ],
   },
   {
@@ -66,13 +84,6 @@ const categories: Category[] = [
     items: [
       { name: 'Cursor', icon: 'simple-icons:cursor' },
       { name: 'Postman', icon: 'logos:postman-icon' },
-    ],
-  },
-  {
-    tag: 'DEV OPS',
-    items: [
-      { name: 'tRPC', icon: 'logos:trpc' },
-      { name: 'GitHub Actions (CI/CD)', icon: 'logos:github-actions' },
     ],
   },
 ]

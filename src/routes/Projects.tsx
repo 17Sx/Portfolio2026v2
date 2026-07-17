@@ -31,7 +31,8 @@ const projects: Project[] = [
     ],
     year: '2025',
     url: 'https://altiora.pro',
-    github: 'https://github.com/AltioraPro/altiora',
+    github: null,
+    githubLocked: true,
   },
   {
     id: 'ata',
