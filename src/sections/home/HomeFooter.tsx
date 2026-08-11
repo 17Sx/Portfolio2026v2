@@ -31,7 +31,7 @@ export function HomeFooter() {
       </div>
       <div className="mt-3 flex items-center justify-between font-mono text-xs tracking-wide text-ink/30">
         <span>{time}</span>
-        {count !== null && <span>{count.toLocaleString()} visitors</span>}
+        {typeof count === 'number' && <span>{count.toLocaleString()} visitors</span>}
       </div>
     </footer>
   )
