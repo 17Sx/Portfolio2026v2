@@ -18,20 +18,27 @@ export type ExperienceEntry = {
 
 export const experienceEntries: ExperienceEntry[] = [
   {
+    id: 'impulse-lab',
+    company: { en: 'Impulse Lab', fr: 'Impulse Lab' },
+    role: { en: 'Web developer · Internship', fr: 'Développeur web · Stage' },
+    period: { en: 'Sep 2026 - Present', fr: 'Sep 2026 - Présent' },
+    url: 'https://impulselab.ai',
+  },
+  {
     id: 'altiora',
     company: { en: 'Altiora', fr: 'Altiora' },
-    role: { en: 'Founder & developer', fr: 'Fondateur & développeur' },
-    period: { en: '2025 - Present', fr: '2025 - Présent' },
+    role: { en: 'Founder & developer', fr: 'Fondateur développeur' },
+    period: { en: 'May 2025 - Present', fr: 'Mai 2025 - Présent' },
     url: 'https://altiora.pro',
   },
   {
     id: 'pmp',
     company: {
-      en: 'PMP (Palm Managing Project)',
-      fr: 'PMP (Palm Managing Project)',
+      en: 'PALM MANAGING PROJECT',
+      fr: 'PALM MANAGING PROJECT',
     },
-    role: { en: 'Full-stack developer', fr: 'Développeur full-stack' },
-    period: { en: '2024 - present', fr: '2024 - présent' },
+    role: { en: 'Web developer · Apprenticeship', fr: 'Développeur web · Alternance' },
+    period: { en: 'Apr 2025 - Sep 2026', fr: 'Avr 2025 - Sep 2026' },
     url: null,
   },
   {
@@ -117,7 +124,7 @@ export const copy = {
       subtitle:
         'Passionate about entrepreneurship and coding, I try to combine both. I want to give myself the means to make a living from what I love.',
       detail:
-        "Day to day I'm a full-stack dev at PMP : internal admin tools, integrations, and products. I like interfaces that feel fast, schemas that stay honest, and code that actually reaches production.",
+        "Day to day I'm a web developer at Impulse Lab: custom apps, AI integrations, and products that ship. I like interfaces that feel fast, schemas that stay honest, and code that actually reaches production.",
     },
     experience: {
       section: 'Experience',
@@ -165,7 +172,7 @@ export const copy = {
       subtitle:
         "Passionné par l'entrepreneuriat et le code, j'essaie de combiner les deux. Je veux me donner les moyens de vivre de ce que j'aime.",
       detail:
-          "Au quotidien je suis full-stack chez PMP : outils d’admin internes, intégrations, et des produits. J’aime les interfaces qui réagissent vite, les modèles de données propres, et le code qui finit vraiment en prod.",
+        "Au quotidien je suis développeur web chez Impulse Lab : apps sur mesure, intégrations IA, et des produits qui partent en prod. J’aime les interfaces qui réagissent vite, les modèles de données propres, et le code qui finit vraiment en prod.",
     },
       experience: {
       section: 'Expérience',

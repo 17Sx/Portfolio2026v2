@@ -74,8 +74,8 @@ const projects: Project[] = [
     id: 'pmp-admin-v3',
     name: { en: 'PMP Admin V3', fr: 'PMP Admin V3' },
     description: {
-      en: 'Internal PMP management back office I rebuilt for my company (React, Express, Prisma, MySQL).',
-      fr: 'Back-office interne de gestion PMP que j’ai refait pour ma boîte (React, Express, Prisma, MySQL).',
+      en: 'Internal PMP management back office I rebuilt while at the company (React, Express, Prisma, MySQL).',
+      fr: 'Back-office interne de gestion PMP que j’ai refait pendant mon expérience là-bas (React, Express, Prisma, MySQL).',
     },
     tech: ['React', 'Express', 'Prisma', 'MySQL'],
     year: '2025',
