@@ -20,7 +20,7 @@ export const experienceEntries: ExperienceEntry[] = [
   {
     id: 'impulse-lab',
     company: { en: 'Impulse Lab', fr: 'Impulse Lab' },
-    role: { en: 'Web developer · Internship', fr: 'Développeur web · Stage' },
+    role: { en: 'Web developer · Apprenticeship', fr: 'Développeur web · Alternance' },
     period: { en: 'Sep 2026 - Present', fr: 'Sep 2026 - Présent' },
     url: 'https://impulselab.ai',
   },
