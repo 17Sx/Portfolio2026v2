@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 
-const USER_ID = process.env.DEEZER_USER_ID
+// Profil Deezer public de Noa ; surchargeable par DEEZER_USER_ID pour un fork
+const USER_ID = process.env.DEEZER_USER_ID || '1809986862'
 const ARTIST_LIMIT = 15
 
 type DeezerArtist = { id: number; name: string; link: string; picture_small: string }
@@ -17,7 +18,7 @@ async function getList<T>(path: string): Promise<DeezerList<T>> {
 }
 
 export default async function handler(_req: VercelRequest, res: VercelResponse) {
-  if (!USER_ID || !/^\d+$/.test(USER_ID)) {
+  if (!/^\d+$/.test(USER_ID)) {
     res.setHeader('Cache-Control', 'no-store')
     res.json({ music: null })
     return
