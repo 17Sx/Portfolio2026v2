@@ -92,7 +92,7 @@ export function PageFrame() {
               >
                 <img src="/gojo.png" alt="" className="h-full w-full object-cover object-[center_32%]" />
               </a>
-              <div className="min-w-0 pb-3">
+              <div className="min-w-0 self-start pt-2.5">
                 <h1 className="text-[22px] leading-none font-bold tracking-tight text-zinc-900 [text-shadow:-1.5px_0_0_rgba(0,200,255,0.35),1.5px_0_0_rgba(255,80,0,0.35)] sm:text-[24px] dark:text-zinc-50 dark:[text-shadow:-1.5px_0_0_rgba(0,200,255,0.65),1.5px_0_0_rgba(255,80,0,0.65)]">
                   {t.nav.name}
                 </h1>
