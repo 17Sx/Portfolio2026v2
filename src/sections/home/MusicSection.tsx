@@ -1,12 +1,12 @@
 import { useDeezer } from '../../hooks/useDeezer.ts'
-import { useIsDark } from '../../hooks/useIsDark.ts'
+import { useTheme } from '../../hooks/useTheme.ts'
 import { useLanguage } from '../../i18n/LanguageContext.tsx'
 import { Section } from '../../components/Section.tsx'
 
 export function MusicSection() {
   const { t } = useLanguage()
   const state = useDeezer()
-  const isDark = useIsDark()
+  const isDark = useTheme().theme === 'dark'
   const music = state.status === 'ready' ? state.music : null
   const status = { loading: t.music.loading, ready: t.music.intro, empty: t.music.failed }[state.status]
 
