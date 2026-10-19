@@ -6,10 +6,11 @@ import { ExperienceItem } from '../components/ExperienceItem.tsx'
 const PREFIX = 'experience-'
 
 export default function Experience() {
-  const { hash } = useLocation()
+  const { hash, key } = useLocation()
   const [open, setOpen] = useState<Record<string, boolean>>({ [experiences[0]?.id ?? '']: true })
 
-  // Un clic sur une barre de la frise pointe vers #experience-<id> : on ouvre ce poste et on défile jusqu'à lui
+  // Un clic sur une barre de la frise pointe vers #experience-<id> : on ouvre ce poste et on défile jusqu'à lui.
+  // `key` change à chaque navigation, donc un second clic sur la même barre rouvre et recentre le poste.
   useEffect(() => {
     const id = hash.startsWith(`#${PREFIX}`) ? hash.slice(PREFIX.length + 1) : ''
     if (!id) {
@@ -18,10 +19,10 @@ export default function Experience() {
     }
     setOpen((current) => ({ ...current, [id]: true }))
     const frame = window.requestAnimationFrame(() => {
-      document.getElementById(`${PREFIX}${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      document.getElementById(`${PREFIX}${id}`)?.scrollIntoView({ block: 'start' })
     })
     return () => window.cancelAnimationFrame(frame)
-  }, [hash])
+  }, [hash, key])
 
   return (
     <div id="all-experiences" className="relative pt-6">

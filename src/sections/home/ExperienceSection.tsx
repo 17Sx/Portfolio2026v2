@@ -8,7 +8,7 @@ import { Section } from '../../components/Section.tsx'
 
 export function ExperienceSection() {
   const { t } = useLanguage()
-  const [open, setOpen] = useState<Record<string, boolean>>({ 'impulse-lab': true })
+  const [open, setOpen] = useState<Record<string, boolean>>({ [experiences[0]?.id ?? '']: true })
 
   return (
     <Section id="experience" title={t.experience.section}>

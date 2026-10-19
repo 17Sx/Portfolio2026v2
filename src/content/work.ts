@@ -12,7 +12,7 @@ export type Experience = {
   logo: string | null
   tile: 'light' | 'dark'
   logoFit?: 'cover'
-  /** Couleur de la barre dans la frise du parcours */
+  /** Couleur de la barre dans la frise du parcours : au moins 3:1 sur fond blanc et sur fond noir */
   color: string
   company: Copy
   role: Copy
@@ -56,7 +56,7 @@ export const experiences: Experience[] = [
     monogram: 'AL',
     logo: '/logos/altiora.png',
     tile: 'dark',
-    color: '#18181b',
+    color: '#0f766e',
     company: { en: 'Altiora', fr: 'Altiora' },
     role: { en: 'Founder & developer', fr: 'Fondateur développeur' },
     period: { en: 'May 2025 — Present', fr: 'Mai 2025 — Présent' },
@@ -111,7 +111,7 @@ export const experiences: Experience[] = [
     monogram: 'FX',
     logo: '/logos/freelance.svg',
     tile: 'dark',
-    color: '#6d28d9',
+    color: '#7c3aed',
     company: { en: 'Freelance', fr: 'Freelance' },
     role: { en: 'Full-stack developer', fr: 'Développeur full-stack' },
     period: { en: '2023 — Present', fr: '2023 — Présent' },

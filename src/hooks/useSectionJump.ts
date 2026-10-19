@@ -12,8 +12,9 @@ export function useSectionJump() {
         navigate({ pathname: '/', hash: id })
         return
       }
-      window.history.replaceState(null, '', `#${id}`)
-      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      navigate({ hash: id }, { replace: true })
+      // Sans `behavior` : le défilement doux vient du CSS, qui respecte prefers-reduced-motion
+      document.getElementById(id)?.scrollIntoView({ block: 'start' })
     },
     [navigate, pathname],
   )

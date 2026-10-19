@@ -10,7 +10,11 @@ export function useActiveSection(ids: readonly string[]) {
     const elements = ids
       .map((id) => document.getElementById(id))
       .filter((element): element is HTMLElement => element !== null)
-    if (elements.length === 0) return
+    if (elements.length === 0) {
+      // Page sans sections (archive des expériences) : aucune entrée de l'index n'est active
+      setActive('')
+      return
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {

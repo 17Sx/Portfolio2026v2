@@ -101,8 +101,8 @@ export function PageFrame() {
         />
 
         <div
-          className={`absolute top-0 ${column} z-0 h-[var(--banner-h)] ${
-            archive ? 'z-20 bg-white dark:bg-black' : 'overflow-hidden bg-zinc-100 dark:bg-black'
+          className={`absolute top-0 ${column} h-[var(--banner-h)] ${
+            archive ? 'z-20 bg-white dark:bg-black' : 'z-0 overflow-hidden bg-zinc-100 dark:bg-black'
           }`}
         >
           {archive ? (

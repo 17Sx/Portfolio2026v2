@@ -139,7 +139,7 @@ export function CareerTimeline() {
                           )}
                         </span>
                         <span
-                          className={`pointer-events-none z-10 text-[10px] font-semibold whitespace-nowrap sm:text-[11px] ${
+                          className={`z-10 text-[10px] font-semibold whitespace-nowrap sm:text-[11px] ${
                             labelInside
                               ? 'relative ml-2 text-white'
                               : `absolute text-zinc-700 dark:text-zinc-300 ${labelBefore ? 'right-full mr-2' : 'left-full ml-2'}`
