@@ -156,6 +156,16 @@ export const copy = {
         SOFTWARE: 'Software',
       } as const,
     },
+    music: {
+      section: 'Music',
+      subtitle: 'What I listen to on Deezer',
+      topArtists: 'Most played',
+      more: 'more',
+      onRepeat: 'On repeat',
+      profile: 'Deezer profile',
+      loading: 'Loading…',
+      empty: 'Nothing to show right now.',
+    },
     footer: { rights: 'All rights reserved.' },
     notFound: {
       title: '404',
@@ -203,6 +213,16 @@ export const copy = {
         INFRA: 'Infra',
         SOFTWARE: 'Logiciels',
       } as const,
+    },
+    music: {
+      section: 'Musique',
+      subtitle: 'Ce que j’écoute sur Deezer',
+      topArtists: 'Les plus écoutés',
+      more: 'de plus',
+      onRepeat: 'En boucle',
+      profile: 'Profil Deezer',
+      loading: 'Chargement…',
+      empty: 'Rien à afficher pour le moment.',
     },
     footer: { rights: 'Tous droits réservés.' },
     notFound: {

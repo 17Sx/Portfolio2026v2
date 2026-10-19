@@ -34,6 +34,16 @@ export function BottomNav() {
       >
         Stack
       </NavLink>
+      <NavLink
+        to="/music"
+        className={({ isActive }) =>
+          `flex flex-1 items-center justify-center py-4 font-mono text-xs uppercase tracking-widest transition-colors border-l border-ink/10 ${
+            isActive ? 'text-ink' : 'text-ink/35 hover:text-ink/60'
+          }`
+        }
+      >
+        Music
+      </NavLink>
     </nav>
   )
 }

@@ -22,6 +22,9 @@ export function SideNav() {
       <NavLink to="/stack" className={linkClass}>
         Stack
       </NavLink>
+      <NavLink to="/music" className={linkClass}>
+        Music
+      </NavLink>
     </nav>
   )
 }
