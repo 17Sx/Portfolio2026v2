@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 export function useActiveSection(ids: readonly string[]) {
   const [active, setActive] = useState(ids[0] ?? '')
+  // Les sections n'existent que sur l'accueil : on se réabonne à chaque changement de page
+  const { pathname } = useLocation()
 
   useEffect(() => {
     const elements = ids
@@ -22,7 +25,7 @@ export function useActiveSection(ids: readonly string[]) {
 
     for (const element of elements) observer.observe(element)
     return () => observer.disconnect()
-  }, [ids])
+  }, [ids, pathname])
 
   return active
 }

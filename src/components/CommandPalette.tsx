@@ -2,6 +2,7 @@ import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from 
 import { SOCIAL } from '../constants/social.ts'
 import { resumeHref, SECTION_IDS } from '../content/work.ts'
 import { useLanguage } from '../i18n/LanguageContext.tsx'
+import { useSectionJump } from '../hooks/useSectionJump.ts'
 import { useTheme } from '../hooks/useTheme.ts'
 import { SearchIcon } from './icons.tsx'
 
@@ -19,12 +20,12 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
   const [selected, setSelected] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
   const listId = useId()
+  const jump = useSectionJump()
 
   const commands = useMemo<Command[]>(() => {
     const go = (id: string) => {
       onClose()
-      window.history.replaceState(null, '', `#${id}`)
-      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      jump(id)
     }
 
     const sectionLabels: Record<(typeof SECTION_IDS)[number], string> = {
@@ -104,7 +105,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
         },
       },
     ]
-  }, [lang, onClose, t, theme, toggle, toggleLang])
+  }, [jump, lang, onClose, t, theme, toggle, toggleLang])
 
   const results = useMemo(() => {
     const needle = query.trim().toLowerCase()

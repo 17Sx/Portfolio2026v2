@@ -15,6 +15,9 @@ export type Experience = {
   company: Copy
   role: Copy
   period: Copy
+  /** Mois de début et de fin (YYYY-MM) pour la frise ; `end` à null = en cours */
+  start: string
+  end: string | null
   url: string | null
   bullets: Copy[]
   tags: string[]
@@ -30,6 +33,8 @@ export const experiences: Experience[] = [
     company: { en: 'Impulse Lab', fr: 'Impulse Lab' },
     role: { en: 'Web developer · Internship', fr: 'Développeur web · Stage' },
     period: { en: 'Sep 2026 — Present', fr: 'Sep 2026 — Présent' },
+    start: '2026-09',
+    end: null,
     url: 'https://impulselab.ai',
     bullets: [
       {
@@ -51,6 +56,8 @@ export const experiences: Experience[] = [
     company: { en: 'Altiora', fr: 'Altiora' },
     role: { en: 'Founder & developer', fr: 'Fondateur développeur' },
     period: { en: 'May 2025 — Present', fr: 'Mai 2025 — Présent' },
+    start: '2025-05',
+    end: null,
     url: 'https://altiora.pro',
     bullets: [
       {
@@ -73,6 +80,8 @@ export const experiences: Experience[] = [
     company: { en: 'PALM MANAGING PROJECT', fr: 'PALM MANAGING PROJECT' },
     role: { en: 'Web developer · Apprenticeship', fr: 'Développeur web · Alternance' },
     period: { en: 'Apr 2025 — Sep 2026', fr: 'Avr 2025 — Sep 2026' },
+    start: '2025-04',
+    end: '2026-09',
     url: null,
     bullets: [
       {
@@ -100,6 +109,8 @@ export const experiences: Experience[] = [
     company: { en: 'Freelance', fr: 'Freelance' },
     role: { en: 'Full-stack developer', fr: 'Développeur full-stack' },
     period: { en: '2023 — Present', fr: '2023 — Présent' },
+    start: '2023-01',
+    end: null,
     url: null,
     bullets: [
       {

@@ -1,5 +1,6 @@
 import { SECTION_IDS } from '../content/work.ts'
 import { useActiveSection } from '../hooks/useActiveSection.ts'
+import { useSectionJump } from '../hooks/useSectionJump.ts'
 import { useLanguage } from '../i18n/LanguageContext.tsx'
 
 const labels = {
@@ -12,11 +13,7 @@ const labels = {
 export function IndexNav() {
   const { t } = useLanguage()
   const active = useActiveSection(SECTION_IDS)
-
-  function jump(id: string) {
-    window.history.replaceState(null, '', `#${id}`)
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
+  const jump = useSectionJump()
 
   return (
     <nav
