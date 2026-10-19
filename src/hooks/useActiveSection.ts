@@ -1,13 +1,20 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 export function useActiveSection(ids: readonly string[]) {
   const [active, setActive] = useState(ids[0] ?? '')
+  // Les sections n'existent que sur l'accueil : on se réabonne à chaque changement de page
+  const { pathname } = useLocation()
 
   useEffect(() => {
     const elements = ids
       .map((id) => document.getElementById(id))
       .filter((element): element is HTMLElement => element !== null)
-    if (elements.length === 0) return
+    if (elements.length === 0) {
+      // Page sans sections (archive des expériences) : aucune entrée de l'index n'est active
+      setActive('')
+      return
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -22,7 +29,7 @@ export function useActiveSection(ids: readonly string[]) {
 
     for (const element of elements) observer.observe(element)
     return () => observer.disconnect()
-  }, [ids])
+  }, [ids, pathname])
 
   return active
 }

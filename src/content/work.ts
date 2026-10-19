@@ -12,9 +12,14 @@ export type Experience = {
   logo: string | null
   tile: 'light' | 'dark'
   logoFit?: 'cover'
+  /** Couleur de la barre dans la frise du parcours : au moins 3:1 sur fond blanc et sur fond noir */
+  color: string
   company: Copy
   role: Copy
   period: Copy
+  /** Mois de début et de fin (YYYY-MM) pour la frise ; `end` à null = en cours */
+  start: string
+  end: string | null
   url: string | null
   bullets: Copy[]
   tags: string[]
@@ -27,9 +32,12 @@ export const experiences: Experience[] = [
     monogram: 'IL',
     logo: '/logos/impulse.png',
     tile: 'light',
+    color: '#3f7dfb',
     company: { en: 'Impulse Lab', fr: 'Impulse Lab' },
     role: { en: 'Web developer · Internship', fr: 'Développeur web · Stage' },
     period: { en: 'Sep 2026 — Present', fr: 'Sep 2026 — Présent' },
+    start: '2026-09',
+    end: null,
     url: 'https://impulselab.ai',
     bullets: [
       {
@@ -48,9 +56,12 @@ export const experiences: Experience[] = [
     monogram: 'AL',
     logo: '/logos/altiora.png',
     tile: 'dark',
+    color: '#0f766e',
     company: { en: 'Altiora', fr: 'Altiora' },
     role: { en: 'Founder & developer', fr: 'Fondateur développeur' },
     period: { en: 'May 2025 — Present', fr: 'Mai 2025 — Présent' },
+    start: '2025-05',
+    end: null,
     url: 'https://altiora.pro',
     bullets: [
       {
@@ -69,10 +80,13 @@ export const experiences: Experience[] = [
     monogram: 'PMP',
     logo: '/logos/pmp.png',
     tile: 'dark',
+    color: '#d97706',
     logoFit: 'cover',
     company: { en: 'PALM MANAGING PROJECT', fr: 'PALM MANAGING PROJECT' },
     role: { en: 'Web developer · Apprenticeship', fr: 'Développeur web · Alternance' },
     period: { en: 'Apr 2025 — Sep 2026', fr: 'Avr 2025 — Sep 2026' },
+    start: '2025-04',
+    end: '2026-09',
     url: null,
     bullets: [
       {
@@ -97,9 +111,12 @@ export const experiences: Experience[] = [
     monogram: 'FX',
     logo: '/logos/freelance.svg',
     tile: 'dark',
+    color: '#7c3aed',
     company: { en: 'Freelance', fr: 'Freelance' },
     role: { en: 'Full-stack developer', fr: 'Développeur full-stack' },
     period: { en: '2023 — Present', fr: '2023 — Présent' },
+    start: '2023-01',
+    end: null,
     url: null,
     bullets: [
       {
