@@ -8,12 +8,13 @@ export function MusicSection() {
   const state = useDeezer()
   const isDark = useIsDark()
   const music = state.status === 'ready' ? state.music : null
+  const status = { loading: t.music.loading, ready: t.music.intro, empty: t.music.failed }[state.status]
 
   return (
     <Section id="music" title={t.music.section}>
       <div className="mb-3 flex items-baseline justify-between gap-3">
         <p className="text-[13px] text-zinc-500">
-          {state.status === 'loading' ? t.music.loading : music ? t.music.intro : t.music.failed}
+          {status}
         </p>
         {music ? (
           <a
@@ -27,6 +28,22 @@ export function MusicSection() {
         ) : null}
       </div>
 
+      {state.status === 'loading' ? (
+        <div aria-hidden>
+          <div className="flex flex-wrap gap-1.5">
+            {[72, 120, 64, 88, 80, 104, 70, 92, 110, 66, 96, 84, 118, 76, 90, 100, 82, 112, 68].map((width, index) => (
+              <span
+                key={index}
+                className="h-[30px] animate-pulse rounded-full bg-zinc-100 motion-reduce:animate-none dark:bg-zinc-900"
+                style={{ width }}
+              />
+            ))}
+          </div>
+          <div className="mt-6 h-[23px]" />
+          <div className="h-[154px] animate-pulse rounded-[10px] bg-zinc-100 motion-reduce:animate-none dark:bg-zinc-900" />
+        </div>
+      ) : null}
+
       {music && music.artists.length > 0 ? (
         <div className="flex flex-wrap items-center gap-1.5">
           {music.artists.map((artist) => (
@@ -37,12 +54,16 @@ export function MusicSection() {
               rel="noreferrer"
               className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-zinc-50 py-1 pr-2.5 pl-1 text-[13px] text-zinc-700 transition-colors hover:border-black/20 hover:text-zinc-900 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-white/20 dark:hover:text-zinc-50"
             >
-              <img
-                src={artist.picture}
-                alt=""
-                loading="lazy"
-                className="size-4 shrink-0 rounded-full object-cover grayscale"
-              />
+              {artist.picture ? (
+                <img
+                  src={artist.picture}
+                  alt=""
+                  loading="lazy"
+                  className="size-4 shrink-0 rounded-full object-cover grayscale"
+                />
+              ) : (
+                <span aria-hidden className="size-4 shrink-0 rounded-full bg-zinc-200 dark:bg-zinc-700" />
+              )}
               {artist.name}
             </a>
           ))}

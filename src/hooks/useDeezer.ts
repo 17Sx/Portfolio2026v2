@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 export type DeezerMusic = {
   profileUrl: string
-  artists: { id: number; name: string; link: string; picture: string }[]
+  artists: { id: number; name: string; link: string; picture: string | null }[]
   moreCount: number
   onRepeat: { id: number; title: string; artist: string } | null
 }
