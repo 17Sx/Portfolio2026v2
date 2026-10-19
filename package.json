@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && tsc -p tsconfig.api.json && vite build",
     "preview": "vite preview",
+    "test": "node --test tests/",
     "banner:render": "node scripts/banner/render.mjs"
   },
   "devDependencies": {

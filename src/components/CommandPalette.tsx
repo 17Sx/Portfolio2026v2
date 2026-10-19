@@ -32,6 +32,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
       projects: t.index.projects,
       skills: t.index.skills,
       github: t.index.github,
+      music: t.index.music,
     }
 
     return [

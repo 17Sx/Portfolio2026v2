@@ -1,6 +1,6 @@
 import type { Lang } from '../i18n/translations.ts'
 
-export const SECTION_IDS = ['experience', 'projects', 'skills', 'github'] as const
+export const SECTION_IDS = ['experience', 'projects', 'skills', 'github', 'music'] as const
 
 export type SectionId = (typeof SECTION_IDS)[number]
 

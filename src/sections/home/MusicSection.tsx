@@ -1,0 +1,102 @@
+import { useDeezer } from '../../hooks/useDeezer.ts'
+import { useTheme } from '../../hooks/useTheme.ts'
+import { useLanguage } from '../../i18n/LanguageContext.tsx'
+import { Section } from '../../components/Section.tsx'
+
+export function MusicSection() {
+  const { t } = useLanguage()
+  const state = useDeezer()
+  const isDark = useTheme().theme === 'dark'
+  const music = state.status === 'ready' ? state.music : null
+  const status = { loading: t.music.loading, ready: t.music.intro, empty: t.music.failed }[state.status]
+
+  return (
+    <Section id="music" title={t.music.section}>
+      <div className="mb-3 flex items-baseline justify-between gap-3">
+        <p role="status" className="text-[13px] text-zinc-500">
+          {status}
+        </p>
+        {music ? (
+          <a
+            href={music.profileUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="shrink-0 text-[13px] text-zinc-500 underline-offset-4 hover:text-zinc-900 hover:underline dark:hover:text-zinc-100"
+          >
+            Deezer
+          </a>
+        ) : null}
+      </div>
+
+      {state.status === 'loading' ? (
+        <div aria-hidden>
+          <div className="flex flex-wrap gap-1.5">
+            {/* Autant de puces que d'artistes renvoyés par api/deezer.ts (ARTIST_LIMIT) */}
+            {[96, 140, 84, 120, 108, 132, 92, 124, 140, 88, 128, 112, 150, 100, 118].map((width, index) => (
+              <span
+                key={index}
+                className="h-[30px] animate-pulse rounded-full bg-zinc-100 motion-reduce:animate-none dark:bg-zinc-900"
+                style={{ width }}
+              />
+            ))}
+          </div>
+          <div className="mt-6 h-[23px]" />
+          <div className="h-[154px] animate-pulse rounded-[10px] bg-zinc-100 motion-reduce:animate-none dark:bg-zinc-900" />
+        </div>
+      ) : null}
+
+      {music && music.artists.length > 0 ? (
+        <div className="flex flex-wrap items-center gap-1.5">
+          {music.artists.map((artist) => (
+            <a
+              key={artist.id}
+              href={artist.link}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-zinc-50 py-1 pr-2.5 pl-1 text-[13px] text-zinc-700 transition-colors hover:border-black/20 hover:text-zinc-900 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:border-white/20 dark:hover:text-zinc-50"
+            >
+              {artist.picture ? (
+                <img
+                  src={artist.picture}
+                  alt=""
+                  loading="lazy"
+                  className="size-4 shrink-0 rounded-full object-cover grayscale"
+                />
+              ) : (
+                <span aria-hidden className="size-4 shrink-0 rounded-full bg-zinc-200 dark:bg-zinc-700" />
+              )}
+              {artist.name}
+            </a>
+          ))}
+          {music.moreCount > 0 ? (
+            <span className="px-1 font-mono text-[11px] text-zinc-400">
+              {t.music.more.replace('{count}', String(music.moreCount))}
+            </span>
+          ) : null}
+        </div>
+      ) : null}
+
+      {music?.onRepeat ? (
+        <div className="mt-6">
+          <div className="flex items-baseline gap-2 pb-2.5">
+            <p className="font-mono text-[10px] font-medium tracking-wider text-zinc-400 uppercase">
+              {t.music.onRepeat}
+            </p>
+            <span className="font-mono text-[10px] text-zinc-400">{music.onRepeat.artist}</span>
+          </div>
+          <div className="overflow-hidden rounded-[10px] border border-black/10 dark:border-white/10">
+            <iframe
+              key={isDark ? 'dark' : 'light'}
+              title={`${music.onRepeat.title} · ${music.onRepeat.artist} (Deezer)`}
+              src={`https://widget.deezer.com/widget/${isDark ? 'dark' : 'light'}/track/${music.onRepeat.id}`}
+              height="152"
+              loading="lazy"
+              allow="encrypted-media; clipboard-write"
+              className="block w-full"
+            />
+          </div>
+        </div>
+      ) : null}
+    </Section>
+  )
+}

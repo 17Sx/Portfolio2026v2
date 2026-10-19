@@ -7,6 +7,7 @@ const labels = {
   projects: 'projects',
   skills: 'skills',
   github: 'github',
+  music: 'music',
 } as const
 
 export function IndexNav() {
