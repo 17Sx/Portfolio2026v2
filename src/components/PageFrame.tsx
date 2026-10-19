@@ -25,7 +25,7 @@ function BannerClock() {
 
   return (
     <div
-      className="absolute right-4 bottom-4 flex items-center text-zinc-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)]"
+      className="absolute right-4 bottom-4 flex items-center text-zinc-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)] dark:text-zinc-100 dark:drop-shadow-[0_1px_1px_rgba(0,0,0,0.9)]"
       aria-label={label}
     >
       <span className="font-doto text-[24px] leading-none font-bold tracking-[0.14em]">{time.h}</span>
@@ -34,6 +34,39 @@ function BannerClock() {
       <Colon />
       <span className="font-doto text-[24px] leading-none font-bold tracking-[0.14em]">{time.s}</span>
     </div>
+  )
+}
+
+const REDUCED_MOTION = '(prefers-reduced-motion: reduce)'
+
+function BannerMedia({ theme }: { theme: 'light' | 'dark' }) {
+  const [still, setStill] = useState(() => matchMedia(REDUCED_MOTION).matches)
+  const poster = `/banner/wanderer-${theme}.jpg`
+  const media = 'h-full w-full object-cover object-center'
+
+  useEffect(() => {
+    const query = matchMedia(REDUCED_MOTION)
+    const onChange = () => setStill(query.matches)
+    query.addEventListener('change', onChange)
+    return () => query.removeEventListener('change', onChange)
+  }, [])
+
+  if (still) return <img src={poster} alt="" className={media} />
+
+  return (
+    <video
+      key={theme}
+      src={`/banner/wanderer-${theme}.mp4`}
+      poster={poster}
+      autoPlay
+      muted
+      loop
+      playsInline
+      disablePictureInPicture
+      disableRemotePlayback
+      aria-hidden
+      className={media}
+    />
   )
 }
 
@@ -77,7 +110,7 @@ export function PageFrame() {
         />
 
         <div className={`absolute top-0 ${column} z-0 h-[var(--banner-h)] overflow-hidden bg-zinc-100 dark:bg-black`}>
-          <img src="/banner/eye.jpg" alt="" className="h-full w-full object-cover object-center" />
+          <BannerMedia theme={theme} />
           <BannerClock />
         </div>
 
