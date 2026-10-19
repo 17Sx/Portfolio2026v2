@@ -52,12 +52,11 @@ function BannerMedia({ theme }: { theme: 'light' | 'dark' }) {
     return () => query.removeEventListener('change', onChange)
   }, [])
 
-  // Stop decoding once the banner has scrolled out of view.
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
     const visibility = new IntersectionObserver(([entry]) => {
-      // A refused play() (autoplay blocked) leaves the poster in place, which is the intended fallback.
+      // Playback is driven by visibility only. A refused play() leaves the poster, the intended fallback.
       if (entry.isIntersecting) void video.play().catch(() => {})
       else video.pause()
     })
@@ -73,7 +72,6 @@ function BannerMedia({ theme }: { theme: 'light' | 'dark' }) {
       ref={videoRef}
       src={`/banner/wanderer-${theme}.mp4`}
       poster={poster}
-      autoPlay
       muted
       loop
       playsInline
@@ -136,6 +134,7 @@ export function PageFrame() {
                 href={SOCIAL.github}
                 target="_blank"
                 rel="noreferrer"
+                aria-label="GitHub"
                 className="relative z-10 mb-1 size-[72px] shrink-0 -translate-y-16 overflow-hidden rounded-xl border border-black/10 bg-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] sm:size-[88px] dark:border-white/15"
               >
                 <img src={`${SOCIAL.github}.png`} alt="" className="h-full w-full object-cover" />
