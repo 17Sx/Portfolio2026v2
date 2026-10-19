@@ -24,6 +24,7 @@ export const copy = {
       projects: 'Projects',
       skills: 'Stack',
       github: 'GitHub',
+      music: 'Music',
     },
     experience: { section: 'Experience' },
     projects: {
@@ -36,6 +37,14 @@ export const copy = {
     skills: {
       section: 'Stack',
       intro: 'Next.js and Tailwind up front. PostgreSQL on Neon, Drizzle as the ORM. Cursor to ship.',
+    },
+    music: {
+      section: 'Music',
+      intro: 'Most played on Deezer',
+      loading: 'Loading listening stats',
+      failed: 'Listening stats unavailable.',
+      more: '+{count} more',
+      onRepeat: 'On repeat',
     },
     github: {
       section: 'GitHub',
@@ -99,6 +108,7 @@ export const copy = {
       projects: 'Projets',
       skills: 'Stack',
       github: 'GitHub',
+      music: 'Musique',
     },
     experience: { section: 'Expérience' },
     projects: {
@@ -111,6 +121,14 @@ export const copy = {
     skills: {
       section: 'Stack',
       intro: 'Next.js et Tailwind devant. PostgreSQL sur Neon, Drizzle en ORM. Cursor pour livrer.',
+    },
+    music: {
+      section: 'Musique',
+      intro: 'Les plus écoutés sur Deezer',
+      loading: 'Chargement des écoutes',
+      failed: 'Statistiques d’écoute indisponibles.',
+      more: '+{count} de plus',
+      onRepeat: 'En boucle',
     },
     github: {
       section: 'GitHub',

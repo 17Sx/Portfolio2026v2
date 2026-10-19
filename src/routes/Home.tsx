@@ -5,6 +5,7 @@ import {
   ExtraFooter,
   GithubSection,
   HomeFooter,
+  MusicSection,
   ProjectsSection,
   SkillsSection,
 } from '../sections/home/index.ts'
@@ -26,6 +27,7 @@ export default function Home() {
       <ProjectsSection />
       <SkillsSection />
       <GithubSection />
+      <MusicSection />
       <HomeFooter />
       <ExtraFooter />
     </>

@@ -30,6 +30,10 @@ npm run dev
 
 The site runs on `http://localhost:5173`.
 
+## Music section (Deezer)
+
+The Music section on the home page shows my most played artists and my top track, pulled live from Deezer's public API by `api/deezer.ts`. It defaults to my profile; if you fork the repo, set `DEEZER_USER_ID` (the number in `https://www.deezer.com/profile/<id>`) in the Vercel project environment, and keep that Deezer profile public.
+
 ## License
 
 Reuse is welcome; a mention or link back is appreciated.
