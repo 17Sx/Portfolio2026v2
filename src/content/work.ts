@@ -120,6 +120,10 @@ export const experiences: Experience[] = [
     url: null,
     bullets: [
       {
+        en: 'Many projects shipped for clients, most of them private. A few examples:',
+        fr: 'De nombreux projets livrés pour des clients, la plupart restés privés. Quelques exemples :',
+      },
+      {
         en: 'BKM Poker — bankroll management for poker players.',
         fr: 'BKM Poker — gestion de bankroll pour les joueurs de poker.',
       },
