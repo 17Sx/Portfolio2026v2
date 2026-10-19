@@ -12,6 +12,8 @@ export type Experience = {
   logo: string | null
   tile: 'light' | 'dark'
   logoFit?: 'cover'
+  /** Couleur de la barre dans la frise du parcours */
+  color: string
   company: Copy
   role: Copy
   period: Copy
@@ -30,6 +32,7 @@ export const experiences: Experience[] = [
     monogram: 'IL',
     logo: '/logos/impulse.png',
     tile: 'light',
+    color: '#3f7dfb',
     company: { en: 'Impulse Lab', fr: 'Impulse Lab' },
     role: { en: 'Web developer · Internship', fr: 'Développeur web · Stage' },
     period: { en: 'Sep 2026 — Present', fr: 'Sep 2026 — Présent' },
@@ -53,6 +56,7 @@ export const experiences: Experience[] = [
     monogram: 'AL',
     logo: '/logos/altiora.png',
     tile: 'dark',
+    color: '#18181b',
     company: { en: 'Altiora', fr: 'Altiora' },
     role: { en: 'Founder & developer', fr: 'Fondateur développeur' },
     period: { en: 'May 2025 — Present', fr: 'Mai 2025 — Présent' },
@@ -76,6 +80,7 @@ export const experiences: Experience[] = [
     monogram: 'PMP',
     logo: '/logos/pmp.png',
     tile: 'dark',
+    color: '#d97706',
     logoFit: 'cover',
     company: { en: 'PALM MANAGING PROJECT', fr: 'PALM MANAGING PROJECT' },
     role: { en: 'Web developer · Apprenticeship', fr: 'Développeur web · Alternance' },
@@ -106,6 +111,7 @@ export const experiences: Experience[] = [
     monogram: 'FX',
     logo: '/logos/freelance.svg',
     tile: 'dark',
+    color: '#6d28d9',
     company: { en: 'Freelance', fr: 'Freelance' },
     role: { en: 'Full-stack developer', fr: 'Développeur full-stack' },
     period: { en: '2023 — Present', fr: '2023 — Présent' },

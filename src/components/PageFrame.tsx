@@ -4,9 +4,10 @@ import { useClock } from '../hooks/useClock.ts'
 import { useLanguage } from '../i18n/LanguageContext.tsx'
 import { useTheme } from '../hooks/useTheme.ts'
 import { CommandPalette } from './CommandPalette.tsx'
-import { MoonIcon, SunIcon } from './icons.tsx'
+import { CareerTimeline } from './CareerTimeline.tsx'
+import { ArrowLeftIcon, MoonIcon, SunIcon } from './icons.tsx'
 import { IndexNav } from './IndexNav.tsx'
-import { Outlet } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 
 const column = 'right-0 left-0 md:right-[30%] md:left-[30%]'
 
@@ -37,6 +38,28 @@ function BannerClock() {
   )
 }
 
+function ArchiveHeading() {
+  const { t } = useLanguage()
+
+  return (
+    <div className="flex h-full min-w-0 items-center gap-5">
+      <Link
+        to={{ pathname: '/', hash: 'experience' }}
+        aria-label={t.experience.back}
+        className="group flex size-8 shrink-0 items-center justify-center rounded-md border border-zinc-200/50 bg-zinc-100 text-zinc-400 transition-colors hover:bg-zinc-200 hover:text-zinc-900 dark:border-zinc-800/50 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+      >
+        <ArrowLeftIcon className="size-4 transition-transform group-hover:-translate-x-0.5" />
+      </Link>
+      <div className="min-w-0">
+        <h1 className="mb-0.5 text-[20px] leading-none font-bold tracking-tight text-zinc-800 [text-shadow:-1.5px_0_0_rgba(0,200,255,0.3),1.5px_0_0_rgba(255,80,0,0.3)] sm:text-[24px] dark:text-zinc-100 dark:[text-shadow:-1.5px_0_0_rgba(0,200,255,0.6),1.5px_0_0_rgba(255,80,0,0.6)]">
+          {t.experience.archiveTitle}
+        </h1>
+        <p className="truncate text-[12px] text-zinc-500 dark:text-zinc-400">{t.experience.archiveSubtitle}</p>
+      </div>
+    </div>
+  )
+}
+
 function isMac() {
   return /Mac|iPhone|iPad/.test(navigator.platform)
 }
@@ -46,6 +69,7 @@ export function PageFrame() {
   const { theme, toggle } = useTheme()
   const [palette, setPalette] = useState(false)
   const [mac, setMac] = useState(true)
+  const archive = useLocation().pathname === '/experience'
 
   useEffect(() => {
     setMac(isMac())
@@ -63,7 +87,7 @@ export function PageFrame() {
   }, [])
 
   return (
-    <>
+    <div className={archive ? 'experience-hero' : undefined}>
       <IndexNav />
       <CommandPalette open={palette} onClose={() => setPalette(false)} />
       <div className="relative min-h-screen overflow-x-hidden bg-white text-zinc-800 antialiased dark:bg-black dark:text-zinc-100">
@@ -76,14 +100,25 @@ export function PageFrame() {
           className="rule-dots rule-dots-y pointer-events-none absolute inset-y-0 right-[30%] hidden -translate-x-1/2 md:block"
         />
 
-        <div className={`absolute top-0 ${column} z-0 h-[var(--banner-h)] overflow-hidden bg-zinc-100 dark:bg-black`}>
-          <img src="/banner/eye.jpg" alt="" className="h-full w-full object-cover object-center" />
-          <BannerClock />
+        <div
+          className={`absolute top-0 ${column} z-0 h-[var(--banner-h)] ${
+            archive ? 'z-20 bg-white dark:bg-black' : 'overflow-hidden bg-zinc-100 dark:bg-black'
+          }`}
+        >
+          {archive ? (
+            <CareerTimeline />
+          ) : (
+            <>
+              <img src="/banner/eye.jpg" alt="" className="h-full w-full object-cover object-center" />
+              <BannerClock />
+            </>
+          )}
         </div>
 
         <header className={`absolute top-[var(--banner-h)] ${column} z-40 flex h-[var(--profile-h)] items-stretch px-4`}>
           <div className="flex h-full w-full items-start justify-between gap-3">
-            <div className="flex h-full min-w-0 items-end gap-3.5 sm:gap-4">
+            {archive ? <ArchiveHeading /> : null}
+            <div className={`flex h-full min-w-0 items-end gap-3.5 sm:gap-4 ${archive ? 'hidden' : ''}`}>
               <a
                 href={SOCIAL.github}
                 target="_blank"
@@ -144,6 +179,6 @@ export function PageFrame() {
           <Outlet />
         </main>
       </div>
-    </>
+    </div>
   )
 }

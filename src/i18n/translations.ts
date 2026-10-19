@@ -34,6 +34,8 @@ export const copy = {
       now: 'Now',
       present: 'Present',
       back: 'Back to home',
+      drag: 'drag',
+      timelineHint: 'Select a role to open its details below.',
     },
     projects: {
       section: 'Projects',
@@ -118,6 +120,8 @@ export const copy = {
       now: 'Auj.',
       present: 'Présent',
       back: 'Retour à l’accueil',
+      drag: 'glisser',
+      timelineHint: 'Choisis un poste pour ouvrir son détail plus bas.',
     },
     projects: {
       section: 'Projets',

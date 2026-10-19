@@ -71,6 +71,14 @@ export function ChevronIcon(props: IconProps) {
   )
 }
 
+export function ArrowLeftIcon(props: IconProps) {
+  return (
+    <Stroke {...props}>
+      <path d="m12 19-7-7 7-7M19 12H5" />
+    </Stroke>
+  )
+}
+
 export function ArrowIcon(props: IconProps) {
   return (
     <Stroke {...props}>
