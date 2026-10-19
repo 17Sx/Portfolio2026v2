@@ -47,7 +47,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
   // Une seule URL canonique : chaque query string différente contournerait le cache CDN et rappellerait Deezer
   if (req.url?.includes('?')) {
-    res.setHeader('Cache-Control', 'public, max-age=3600')
+    res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=3600')
     res.redirect(308, '/api/deezer')
     return
   }
@@ -71,17 +71,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       : []
   const onRepeat = tracksResult.status === 'fulfilled' ? toTrack(tracksResult.value.data[0]) : null
 
-  if (artists.length === 0 && !onRepeat) {
-    // Cache négatif court : une panne Deezer ne fait pas rappeler l'API à chaque visite
+  if (artistsResult.status === 'rejected' && tracksResult.status === 'rejected') {
+    // Cache négatif court, en 200 car le CDN Vercel ne met pas en cache les 5xx :
+    // une panne Deezer ne fait pas rappeler l'API à chaque visite
     res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=60')
-    res.status(502).json({ music: null })
+    res.json({ music: null })
     return
   }
 
   const total = artistsResult.status === 'fulfilled' ? artistsResult.value.total : null
-  // Réponse partielle (un des deux appels a échoué) : on la garde moins longtemps
+  // Réponse partielle (un des deux appels a échoué) : gardée 5 min, sans longue fenêtre stale
   const partial = artistsResult.status === 'rejected' || tracksResult.status === 'rejected'
-  res.setHeader('Cache-Control', `public, max-age=0, s-maxage=${partial ? 300 : 3600}, stale-while-revalidate=86400`)
+  res.setHeader(
+    'Cache-Control',
+    partial
+      ? 'public, max-age=0, s-maxage=300, stale-while-revalidate=60'
+      : 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400',
+  )
   res.json({
     music: {
       profileUrl: `https://www.deezer.com/profile/${USER_ID}`,

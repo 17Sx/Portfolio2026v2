@@ -13,7 +13,7 @@ export function MusicSection() {
   return (
     <Section id="music" title={t.music.section}>
       <div className="mb-3 flex items-baseline justify-between gap-3">
-        <p className="text-[13px] text-zinc-500">
+        <p role="status" className="text-[13px] text-zinc-500">
           {status}
         </p>
         {music ? (
@@ -31,7 +31,8 @@ export function MusicSection() {
       {state.status === 'loading' ? (
         <div aria-hidden>
           <div className="flex flex-wrap gap-1.5">
-            {[72, 120, 64, 88, 80, 104, 70, 92, 110, 66, 96, 84, 118, 76, 90, 100, 82, 112, 68].map((width, index) => (
+            {/* Autant de puces que d'artistes renvoyés par api/deezer.ts (ARTIST_LIMIT) */}
+            {[96, 140, 84, 120, 108, 132, 92, 124, 140, 88, 128, 112, 150, 100, 118].map((width, index) => (
               <span
                 key={index}
                 className="h-[30px] animate-pulse rounded-full bg-zinc-100 motion-reduce:animate-none dark:bg-zinc-900"
