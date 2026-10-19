@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { SOCIAL } from '../constants/social.ts'
 import { useClock } from '../hooks/useClock.ts'
 import { useLanguage } from '../i18n/LanguageContext.tsx'
@@ -25,7 +25,7 @@ function BannerClock() {
 
   return (
     <div
-      className="absolute right-4 bottom-4 flex items-center text-zinc-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)]"
+      className="absolute right-4 bottom-4 flex items-center text-zinc-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)] dark:text-zinc-100 dark:drop-shadow-[0_1px_1px_rgba(0,0,0,0.9)]"
       aria-label={label}
     >
       <span className="font-doto text-[24px] leading-none font-bold tracking-[0.14em]">{time.h}</span>
@@ -34,6 +34,52 @@ function BannerClock() {
       <Colon />
       <span className="font-doto text-[24px] leading-none font-bold tracking-[0.14em]">{time.s}</span>
     </div>
+  )
+}
+
+const REDUCED_MOTION = '(prefers-reduced-motion: reduce)'
+
+function BannerMedia({ theme }: { theme: 'light' | 'dark' }) {
+  const [still, setStill] = useState(() => matchMedia(REDUCED_MOTION).matches)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const poster = `/banner/wanderer-${theme}.jpg`
+  const media = 'h-full w-full object-cover object-center'
+
+  useEffect(() => {
+    const query = matchMedia(REDUCED_MOTION)
+    const onChange = () => setStill(query.matches)
+    query.addEventListener('change', onChange)
+    return () => query.removeEventListener('change', onChange)
+  }, [])
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+    const visibility = new IntersectionObserver(([entry]) => {
+      // Playback is driven by visibility only. A refused play() leaves the poster, the intended fallback.
+      if (entry.isIntersecting) void video.play().catch(() => {})
+      else video.pause()
+    })
+    visibility.observe(video)
+    return () => visibility.disconnect()
+  }, [theme, still])
+
+  if (still) return <img src={poster} alt="" className={media} />
+
+  return (
+    <video
+      key={theme}
+      ref={videoRef}
+      src={`/banner/wanderer-${theme}.mp4`}
+      poster={poster}
+      muted
+      loop
+      playsInline
+      disablePictureInPicture
+      disableRemotePlayback
+      aria-hidden
+      className={media}
+    />
   )
 }
 
@@ -77,7 +123,7 @@ export function PageFrame() {
         />
 
         <div className={`absolute top-0 ${column} z-0 h-[var(--banner-h)] overflow-hidden bg-zinc-100 dark:bg-black`}>
-          <img src="/banner/eye.jpg" alt="" className="h-full w-full object-cover object-center" />
+          <BannerMedia theme={theme} />
           <BannerClock />
         </div>
 
@@ -88,9 +134,10 @@ export function PageFrame() {
                 href={SOCIAL.github}
                 target="_blank"
                 rel="noreferrer"
+                aria-label="GitHub"
                 className="relative z-10 mb-1 size-[72px] shrink-0 -translate-y-16 overflow-hidden rounded-xl border border-black/10 bg-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] sm:size-[88px] dark:border-white/15"
               >
-                <img src="/gojo.png" alt="" className="h-full w-full object-cover object-[center_32%]" />
+                <img src={`${SOCIAL.github}.png`} alt="" className="h-full w-full object-cover" />
               </a>
               <div className="min-w-0 pb-3">
                 <h1 className="text-[22px] leading-none font-bold tracking-tight text-zinc-900 [text-shadow:-1.5px_0_0_rgba(0,200,255,0.35),1.5px_0_0_rgba(255,80,0,0.35)] sm:text-[24px] dark:text-zinc-50 dark:[text-shadow:-1.5px_0_0_rgba(0,200,255,0.65),1.5px_0_0_rgba(255,80,0,0.65)]">

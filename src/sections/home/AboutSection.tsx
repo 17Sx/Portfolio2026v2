@@ -64,10 +64,6 @@ export function AboutSection() {
           <LinkedInIcon className="size-3.5" />
           LinkedIn
         </a>
-        <a href={resumeHref(lang)} target="_blank" rel="noreferrer" className={pill}>
-          <FileIcon className="size-3.5" />
-          {lang === 'fr' ? 'CV' : 'Résumé'}
-        </a>
       </div>
     </section>
   )

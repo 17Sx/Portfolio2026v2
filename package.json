@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc && tsc -p tsconfig.api.json && vite build",
     "preview": "vite preview",
-    "test": "node --test tests/"
+    "test": "node --test tests/",
+    "banner:render": "node scripts/banner/render.mjs"
   },
   "devDependencies": {
     "@types/react": "^19.2.14",
