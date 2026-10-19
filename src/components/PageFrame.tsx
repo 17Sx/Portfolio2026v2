@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { SOCIAL } from '../constants/social.ts'
 import { useClock } from '../hooks/useClock.ts'
 import { useLanguage } from '../i18n/LanguageContext.tsx'
@@ -41,6 +41,7 @@ const REDUCED_MOTION = '(prefers-reduced-motion: reduce)'
 
 function BannerMedia({ theme }: { theme: 'light' | 'dark' }) {
   const [still, setStill] = useState(() => matchMedia(REDUCED_MOTION).matches)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const poster = `/banner/wanderer-${theme}.jpg`
   const media = 'h-full w-full object-cover object-center'
 
@@ -51,11 +52,25 @@ function BannerMedia({ theme }: { theme: 'light' | 'dark' }) {
     return () => query.removeEventListener('change', onChange)
   }, [])
 
+  // Stop decoding once the banner has scrolled out of view.
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+    const visibility = new IntersectionObserver(([entry]) => {
+      // A refused play() (autoplay blocked) leaves the poster in place, which is the intended fallback.
+      if (entry.isIntersecting) void video.play().catch(() => {})
+      else video.pause()
+    })
+    visibility.observe(video)
+    return () => visibility.disconnect()
+  }, [theme, still])
+
   if (still) return <img src={poster} alt="" className={media} />
 
   return (
     <video
       key={theme}
+      ref={videoRef}
       src={`/banner/wanderer-${theme}.mp4`}
       poster={poster}
       autoPlay
