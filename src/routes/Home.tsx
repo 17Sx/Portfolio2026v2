@@ -1,21 +1,33 @@
+import { useEffect } from 'react'
 import {
   AboutSection,
-  CvSection,
   ExperienceSection,
+  ExtraFooter,
+  GithubSection,
   HomeFooter,
-  StatsSection,
+  ProjectsSection,
+  SkillsSection,
 } from '../sections/home/index.ts'
 
 export default function Home() {
+  useEffect(() => {
+    const id = window.location.hash.replace('#', '')
+    if (!id) return
+    const frame = window.requestAnimationFrame(() => {
+      document.getElementById(id)?.scrollIntoView()
+    })
+    return () => window.cancelAnimationFrame(frame)
+  }, [])
+
   return (
-    <div className="mx-auto max-w-5xl px-4 sm:px-8 pb-20 md:pb-6 h-full flex flex-col overflow-y-auto md:overflow-hidden">
-      <div className="flex-1 flex flex-col md:justify-between gap-6 md:gap-0">
-        <AboutSection />
-        <StatsSection />
-        <ExperienceSection />
-        <CvSection />
-        <HomeFooter />
-      </div>
-    </div>
+    <>
+      <AboutSection />
+      <ExperienceSection />
+      <ProjectsSection />
+      <SkillsSection />
+      <GithubSection />
+      <HomeFooter />
+      <ExtraFooter />
+    </>
   )
 }
