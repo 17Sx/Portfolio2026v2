@@ -174,7 +174,8 @@ export function PageFrame() {
               >
                 <img src={`${SOCIAL.github}.png`} alt="" className="h-full w-full object-cover" />
               </a>
-              <div className="min-w-0 pb-3">
+              {/* Entre md et lg la colonne centrale est trop étroite pour le nom à côté des contrôles : il reste en bas */}
+              <div className="min-w-0 self-start pt-2.5 md:self-end md:pt-0 md:pb-3 lg:self-start lg:pt-2.5 lg:pb-0">
                 <h1 className="text-[22px] leading-none font-bold tracking-tight text-zinc-900 [text-shadow:-1.5px_0_0_rgba(0,200,255,0.35),1.5px_0_0_rgba(255,80,0,0.35)] sm:text-[24px] dark:text-zinc-50 dark:[text-shadow:-1.5px_0_0_rgba(0,200,255,0.65),1.5px_0_0_rgba(255,80,0,0.65)]">
                   {t.nav.name}
                 </h1>
