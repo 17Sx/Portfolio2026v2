@@ -29,7 +29,8 @@ export function DitherGrid() {
     const context = canvas?.getContext('2d')
     if (!canvas || !context) return
 
-    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
+    let still = motion.matches
     let width = 0
     let height = 0
     let cols = 0
@@ -41,21 +42,7 @@ export function DitherGrid() {
     let last = performance.now()
     let pointer: { x: number; y: number } | null = null
 
-    function resize() {
-      const rect = canvas!.getBoundingClientRect()
-      const ratio = Math.min(window.devicePixelRatio || 1, 2)
-      width = rect.width
-      height = rect.height
-      canvas!.width = Math.round(width * ratio)
-      canvas!.height = Math.round(height * ratio)
-      context!.setTransform(ratio, 0, 0, ratio, 0, 0)
-      cols = Math.ceil(width / CELL)
-      rows = Math.ceil(height / CELL)
-      heat = new Float32Array(cols * rows)
-      draw()
-    }
-
-    function warm() {
+    const warm = () => {
       if (!pointer) return
       const reach = Math.ceil(RADIUS / CELL)
       const cx = Math.floor(pointer.x / CELL)
@@ -70,9 +57,9 @@ export function DitherGrid() {
       }
     }
 
-    function draw() {
-      context!.clearRect(0, 0, width, height)
-      context!.fillStyle = getComputedStyle(canvas!).color
+    const draw = () => {
+      context.clearRect(0, 0, width, height)
+      context.fillStyle = getComputedStyle(canvas).color
       const offset = (CELL - SQUARE) / 2
       for (let y = 0; y < rows; y++) {
         const ground = (y / rows) ** 1.6 * 0.42
@@ -81,14 +68,28 @@ export function DitherGrid() {
           const wave = 0.06 * Math.sin(x * 0.21 + time * 0.7) * Math.cos(y * 0.33 - time * 0.5)
           const value = 0.04 + ground + wave + heat[i] * 0.95
           const lit = value > BAYER[(y & 7) * 8 + (x & 7)]
-          context!.globalAlpha = lit ? 0.22 + heat[i] * 0.6 : 0.06
-          context!.fillRect(x * CELL + offset, y * CELL + offset, SQUARE, SQUARE)
+          context.globalAlpha = lit ? 0.22 + heat[i] * 0.6 : 0.06
+          context.fillRect(x * CELL + offset, y * CELL + offset, SQUARE, SQUARE)
         }
       }
-      context!.globalAlpha = 1
+      context.globalAlpha = 1
     }
 
-    function tick(now: number) {
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect()
+      const ratio = Math.min(window.devicePixelRatio || 1, 2)
+      width = rect.width
+      height = rect.height
+      canvas.width = Math.round(width * ratio)
+      canvas.height = Math.round(height * ratio)
+      context.setTransform(ratio, 0, 0, ratio, 0, 0)
+      cols = Math.ceil(width / CELL)
+      rows = Math.ceil(height / CELL)
+      heat = new Float32Array(cols * rows)
+      draw()
+    }
+
+    const tick = (now: number) => {
       const delta = Math.min(0.05, (now - last) / 1000)
       last = now
       if (!still) time += delta
@@ -104,20 +105,20 @@ export function DitherGrid() {
       frame = visible && !idle ? requestAnimationFrame(tick) : 0
     }
 
-    function wake() {
+    const wake = () => {
       if (!visible || frame) return
       last = performance.now()
       frame = requestAnimationFrame(tick)
     }
 
-    // Text sits on top of the grid, so the pointer is tracked on the window.
-    function onPointer(event: PointerEvent) {
-      const rect = canvas!.getBoundingClientRect()
-      const x = event.clientX - rect.left
-      const y = event.clientY - rect.top
-      const inside = x >= -RADIUS && y >= -RADIUS && x <= rect.width + RADIUS && y <= rect.height + RADIUS
-      pointer = inside && event.type !== 'pointerleave' ? { x, y } : null
-      if (inside) wake()
+    const onPointer = (event: PointerEvent) => {
+      pointer = event.type === 'pointerleave' ? null : { x: event.offsetX, y: event.offsetY }
+      wake()
+    }
+
+    const onMotion = () => {
+      still = motion.matches
+      wake()
     }
 
     const resizeObserver = new ResizeObserver(resize)
@@ -129,15 +130,22 @@ export function DitherGrid() {
     })
     visibility.observe(canvas)
 
-    window.addEventListener('pointermove', onPointer, { passive: true })
-    document.documentElement.addEventListener('pointerleave', onPointer)
+    // The ink follows the theme class on <html>: an idle grid has to repaint when it flips.
+    const theme = new MutationObserver(draw)
+    theme.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+
+    canvas.addEventListener('pointermove', onPointer, { passive: true })
+    canvas.addEventListener('pointerleave', onPointer)
+    motion.addEventListener('change', onMotion)
 
     return () => {
       cancelAnimationFrame(frame)
       resizeObserver.disconnect()
       visibility.disconnect()
-      window.removeEventListener('pointermove', onPointer)
-      document.documentElement.removeEventListener('pointerleave', onPointer)
+      theme.disconnect()
+      canvas.removeEventListener('pointermove', onPointer)
+      canvas.removeEventListener('pointerleave', onPointer)
+      motion.removeEventListener('change', onMotion)
     }
   }, [])
 

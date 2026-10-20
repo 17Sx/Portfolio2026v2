@@ -60,9 +60,14 @@ function compile(gl: WebGLRenderingContext, type: number, source: string) {
 function createProgram(gl: WebGLRenderingContext) {
   const program = gl.createProgram()
   if (!program) throw new Error('createProgram failed')
-  gl.attachShader(program, compile(gl, gl.VERTEX_SHADER, VERTEX))
-  gl.attachShader(program, compile(gl, gl.FRAGMENT_SHADER, FRAGMENT))
+  const shaders = [compile(gl, gl.VERTEX_SHADER, VERTEX), compile(gl, gl.FRAGMENT_SHADER, FRAGMENT)]
+  for (const shader of shaders) gl.attachShader(program, shader)
   gl.linkProgram(program)
+  // The linked program keeps what it needs; the shader objects can go.
+  for (const shader of shaders) {
+    gl.detachShader(program, shader)
+    gl.deleteShader(shader)
+  }
   if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(program) ?? 'program link failed')
   return program
 }
@@ -87,26 +92,37 @@ function sourceReady(source: Source) {
 export function DitherBanner({ theme, still }: { theme: 'light' | 'dark'; still: boolean }) {
   const video = `/banner/wanderer-${theme}.mp4`
   const poster = `/banner/wanderer-${theme}.jpg`
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const hostRef = useRef<HTMLDivElement>(null)
   const posterRef = useRef<HTMLImageElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
   const [fallback, setFallback] = useState(false)
 
   useEffect(() => {
-    const canvas = canvasRef.current
+    const host = hostRef.current
     const source = still ? posterRef.current : videoRef.current
-    if (!canvas || !source) return
+    if (!host || !source) return
+    // Each run owns a fresh canvas and frees its context on cleanup: browsers cap live contexts, and a
+    // lost context cannot be reused by the next run (theme change, reduced motion, StrictMode remount).
+    const canvas = document.createElement('canvas')
+    canvas.setAttribute('aria-hidden', 'true')
+    canvas.className = 'absolute inset-0 h-full w-full'
     const gl = canvas.getContext('webgl', { antialias: false, premultipliedAlpha: false })
     if (!gl) {
       setFallback(true)
       return
     }
+    const release = () => {
+      gl.getExtension('WEBGL_lose_context')?.loseContext()
+      canvas.remove()
+    }
+    host.append(canvas)
 
     let program: WebGLProgram
     try {
       program = createProgram(gl)
     } catch (error) {
       console.error(error)
+      release()
       setFallback(true)
       return
     }
@@ -138,34 +154,44 @@ export function DitherBanner({ theme, still }: { theme: 'light' | 'dark'; still:
     let frame = 0
     let visible = false
     let uploaded = false
+    let failed = false
 
-    function draw() {
-      if (!sourceReady(source!)) return
-      gl!.texImage2D(gl!.TEXTURE_2D, 0, gl!.RGB, gl!.RGB, gl!.UNSIGNED_BYTE, source!)
+    const draw = () => {
+      if (failed || !sourceReady(source)) return
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, source)
       uploaded = true
-      gl!.uniform2f(u.resolution, canvas!.width, canvas!.height)
-      gl!.uniform2f(u.sourceSize, ...sourceSize(source!))
-      gl!.uniform1f(u.cell, Math.max(1, Math.round(ratio)))
-      gl!.uniform1f(u.gamma, GAMMA[theme])
-      gl!.drawArrays(gl!.TRIANGLES, 0, 3)
+      gl.uniform2f(u.resolution, canvas.width, canvas.height)
+      gl.uniform2f(u.sourceSize, ...sourceSize(source))
+      gl.uniform1f(u.cell, Math.max(1, Math.round(ratio)))
+      gl.uniform1f(u.gamma, GAMMA[theme])
+      gl.drawArrays(gl.TRIANGLES, 0, 3)
     }
 
-    function tick() {
+    const tick = () => {
       draw()
-      frame = visible && (!still || !uploaded) ? requestAnimationFrame(tick) : 0
+      frame = visible && !failed && (!still || !uploaded) ? requestAnimationFrame(tick) : 0
     }
 
-    function wake() {
-      if (visible && !frame) frame = requestAnimationFrame(tick)
+    const wake = () => {
+      if (visible && !failed && !frame) frame = requestAnimationFrame(tick)
     }
 
-    function resize() {
-      const rect = canvas!.getBoundingClientRect()
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect()
       ratio = Math.min(window.devicePixelRatio || 1, 2)
-      canvas!.width = Math.round(rect.width * ratio)
-      canvas!.height = Math.round(rect.height * ratio)
-      gl!.viewport(0, 0, canvas!.width, canvas!.height)
+      canvas.width = Math.round(rect.width * ratio)
+      canvas.height = Math.round(rect.height * ratio)
+      gl.viewport(0, 0, canvas.width, canvas.height)
       draw()
+    }
+
+    // A lost context or an unplayable source ends the shader: the plain poster takes over.
+    const fail = (event: Event) => {
+      event.preventDefault()
+      failed = true
+      cancelAnimationFrame(frame)
+      frame = 0
+      setFallback(true)
     }
 
     const resizeObserver = new ResizeObserver(resize)
@@ -182,17 +208,23 @@ export function DitherBanner({ theme, still }: { theme: 'light' | 'dark'; still:
     })
     visibility.observe(canvas)
 
-    const onLoad = () => wake()
-    source.addEventListener(still ? 'load' : 'loadeddata', onLoad)
+    const loaded = still ? 'load' : 'loadeddata'
+    source.addEventListener(loaded, wake)
+    source.addEventListener('error', fail)
+    canvas.addEventListener('webglcontextlost', fail)
 
     return () => {
       cancelAnimationFrame(frame)
       resizeObserver.disconnect()
       visibility.disconnect()
-      source.removeEventListener(still ? 'load' : 'loadeddata', onLoad)
+      source.removeEventListener(loaded, wake)
+      source.removeEventListener('error', fail)
+      canvas.removeEventListener('webglcontextlost', fail)
+      if (source instanceof HTMLVideoElement) source.pause()
       gl.deleteTexture(texture)
       gl.deleteBuffer(buffer)
       gl.deleteProgram(program)
+      release()
     }
   }, [theme, still])
 
@@ -218,7 +250,7 @@ export function DitherBanner({ theme, still }: { theme: 'light' | 'dark'; still:
           className="pointer-events-none absolute size-px opacity-0"
         />
       )}
-      <canvas ref={canvasRef} aria-hidden className="absolute inset-0 h-full w-full" />
+      <div ref={hostRef} className="absolute inset-0" />
     </>
   )
 }
