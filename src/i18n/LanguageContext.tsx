@@ -39,11 +39,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>(() => readStoredLang())
 
   useEffect(() => {
-    document.documentElement.lang = lang === 'fr' ? 'fr' : 'en'
+    document.documentElement.lang = lang
   }, [lang])
 
   const setLang = useCallback((l: Lang) => {
     setLangState(l)
+    // Écrit tout de suite, sans attendre l'effet : le shell de la console relit l'attribut dans le même tour
+    document.documentElement.lang = l
     try {
       localStorage.setItem(STORAGE_KEY, l)
     } catch {

@@ -1,6 +1,9 @@
 import { useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
+/** Saut de section demandé hors React (le shell de la console) : `detail` porte l'id de la section */
+export const SECTION_EVENT = 'portfolio:section'
+
 // Les sections vivent sur l'accueil : depuis une autre page, on y retourne et Home défile jusqu'au hash
 export function useSectionJump() {
   const navigate = useNavigate()

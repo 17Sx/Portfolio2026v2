@@ -4,6 +4,10 @@ export const SECTION_IDS = ['experience', 'projects', 'skills', 'github', 'music
 
 export type SectionId = (typeof SECTION_IDS)[number]
 
+export function isSectionId(value: unknown): value is SectionId {
+  return SECTION_IDS.some((id) => id === value)
+}
+
 export type Copy = { en: string; fr: string }
 
 export type Experience = {

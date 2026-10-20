@@ -1,17 +1,21 @@
 import { version as reactVersion } from 'react'
 import { SOCIAL } from '../constants/social.ts'
-import { experiences, projects, resumeHref, SECTION_IDS, skillGroups, type Copy, type SectionId } from '../content/work.ts'
+import { experiences, isSectionId, projects, resumeHref, SECTION_IDS, skillGroups, type Copy } from '../content/work.ts'
 import type { DeezerMusic } from '../hooks/useDeezer.ts'
+import { SECTION_EVENT } from '../hooks/useSectionJump.ts'
 import { getTheme, setTheme } from '../hooks/useTheme.ts'
 import { LANG_EVENT } from '../i18n/LanguageContext.tsx'
-import type { Lang } from '../i18n/translations.ts'
+import { copy, type Lang } from '../i18n/translations.ts'
+import { isDestructiveRm, resolveToggle } from './args.ts'
 
-// Easter egg : un petit shell dans la console du navigateur. Les commandes sont exposées
-// sur window (help(), whoami()…) et regroupées sous window.sx.
+// Easter egg : un petit shell dans la console du navigateur. Les commandes sont regroupées
+// sous window.sx et, sauf `help`, exposées aussi directement sur window (whoami()…).
 
 const WIPE_CLASS = 'sx-wipe'
 const WIPE_MS = 1400
 const BOOT_STEP_MS = 120
+const THEMES = ['light', 'dark'] as const
+const LANGS: readonly Lang[] = ['en', 'fr']
 
 const S = {
   dim: 'color:#8a8a8a',
@@ -35,8 +39,8 @@ function currentLang(): Lang {
   return document.documentElement.lang === 'fr' ? 'fr' : 'en'
 }
 
-function t(copy: Copy) {
-  return copy[currentLang()]
+function t(text: Copy) {
+  return text[currentLang()]
 }
 
 function prompt(text: string) {
@@ -51,20 +55,8 @@ function usage(text: string) {
   line([t({ en: 'usage: ', fr: 'usage : ' }), S.dim], [text, S.key])
 }
 
-const sectionLabels: Record<SectionId, Copy> = {
-  experience: { en: 'Experience', fr: 'Expérience' },
-  projects: { en: 'Projects', fr: 'Projets' },
-  skills: { en: 'Stack', fr: 'Stack' },
-  github: { en: 'GitHub', fr: 'GitHub' },
-  music: { en: 'Music', fr: 'Musique' },
-}
-
-function isSectionId(value: unknown): value is SectionId {
-  return typeof value === 'string' && (SECTION_IDS as readonly string[]).includes(value)
-}
-
 const commands = [
-  { call: 'help()', about: { en: 'this list', fr: 'cette liste' } },
+  { call: 'sx.help()', about: { en: 'this list', fr: 'cette liste' } },
   { call: 'ls()', about: { en: 'sections of the page', fr: 'les sections de la page' } },
   { call: "cd('projects')", about: { en: 'scroll to a section', fr: 'défiler jusqu’à une section' } },
   { call: 'whoami()', about: { en: 'who is behind this', fr: 'qui est derrière tout ça' } },
@@ -91,8 +83,9 @@ function help() {
 }
 
 function ls() {
+  const labels = copy[currentLang()].index
   for (const id of SECTION_IDS) {
-    line([id.padEnd(12), S.key], [t(sectionLabels[id]), S.dim])
+    line([id.padEnd(12), S.key], [labels[id], S.dim])
   }
   usage("cd('projects')")
 }
@@ -103,20 +96,14 @@ function cd(section?: unknown) {
     usage(`cd('${SECTION_IDS.join("' | '")}')`)
     return
   }
-  const target = document.getElementById(section)
-  if (!target) {
-    // Les sections vivent sur l'accueil : depuis une autre page, on y retourne via le hash
-    window.location.assign(`/#${section}`)
-    return
-  }
-  target.scrollIntoView({ block: 'start' })
-  history.replaceState(null, '', `#${section}`)
+  // Le défilement et le hash passent par le routeur, comme la palette et l'index
+  window.dispatchEvent(new CustomEvent(SECTION_EVENT, { detail: section }))
   prompt(`~/${section}`)
 }
 
 function whoami() {
   const now = experiences.filter((experience) => experience.end === null)
-  line(['Noa', S.bold], [' · ', S.dim], [t({ en: 'Full-stack developer', fr: 'Développeur full-stack' }), S.none], [' · ', S.dim], ['@17Sx', S.key])
+  line(['Noa', S.bold], [' · ', S.dim], [copy[currentLang()].profile.role, S.none], [' · ', S.dim], ['@17Sx', S.key])
   line([t({ en: 'now:      ', fr: 'en ce moment : ' }), S.dim], [now.map((experience) => t(experience.company)).join(' · '), S.none])
   line([t({ en: 'github:   ', fr: 'github :       ' }), S.dim], [SOCIAL.github, S.none])
   line([t({ en: 'linkedin: ', fr: 'linkedin :     ' }), S.dim], [SOCIAL.linkedin, S.none])
@@ -134,11 +121,12 @@ function experience() {
 }
 
 function projectsCommand() {
+  const status = copy[currentLang()].projects.status
   console.table(
     projects.map((project) => ({
       [t({ en: 'project', fr: 'projet' })]: t(project.name),
       [t({ en: 'year', fr: 'année' })]: project.year,
-      [t({ en: 'status', fr: 'statut' })]: project.status,
+      [t({ en: 'status', fr: 'statut' })]: status[project.status],
       [t({ en: 'link', fr: 'lien' })]: project.url ?? project.github ?? '—',
     })),
   )
@@ -184,8 +172,8 @@ function cv() {
 }
 
 function theme(value?: unknown) {
-  const next = value === undefined ? (getTheme() === 'dark' ? 'light' : 'dark') : value
-  if (next !== 'dark' && next !== 'light') {
+  const next = resolveToggle(value, getTheme(), THEMES)
+  if (next === null) {
     line([`theme: ${t({ en: 'unknown theme', fr: 'thème inconnu' })}`, S.err])
     usage("theme('dark' | 'light')")
     return
@@ -195,8 +183,8 @@ function theme(value?: unknown) {
 }
 
 function lang(value?: unknown) {
-  const next = value === undefined ? (currentLang() === 'fr' ? 'en' : 'fr') : value
-  if (next !== 'en' && next !== 'fr') {
+  const next = resolveToggle(value, currentLang(), LANGS)
+  if (next === null) {
     line([`lang: ${t({ en: 'unknown language', fr: 'langue inconnue' })}`, S.err])
     usage("lang('en' | 'fr')")
     return
@@ -218,8 +206,7 @@ let wiping = false
 
 function rm(...args: unknown[]) {
   const flags = args.map(String)
-  const destructive = flags.some((flag) => /^-[a-z]*(r|f)/i.test(flag) || flag === '/')
-  if (!destructive) {
+  if (!isDestructiveRm(flags)) {
     line([`rm: ${t({ en: 'cannot remove', fr: 'impossible de supprimer' })} '${flags[0] ?? ''}': ${t({ en: 'read-only portfolio', fr: 'portfolio en lecture seule' })}`, S.err])
     return
   }
@@ -271,7 +258,7 @@ function boot(art: string | null) {
         `${experiences.length} ${t({ en: 'experiences', fr: 'expériences' })} · ${projects.length} ${t({ en: 'projects', fr: 'projets' })} · ${skillGroups.length} ${t({ en: 'skill groups', fr: 'groupes de compétences' })}`,
       ),
     () => ok(`1 ${t({ en: 'human found', fr: 'humain trouvé' })}: Noa (@17Sx)`),
-    () => prompt(t({ en: 'type help() to start', fr: 'tape help() pour commencer' })),
+    () => prompt(t({ en: 'type sx.help() to start', fr: 'tape sx.help() pour commencer' })),
   ]
   if (art) console.log(`%c${art}`, 'font-family: monospace')
   steps.forEach((step, index) => setTimeout(step, index * BOOT_STEP_MS))
@@ -281,8 +268,9 @@ export function installShell() {
   if ('sx' in window) return
   Object.defineProperty(window, 'sx', { value: api, configurable: true })
   for (const [name, command] of Object.entries(api)) {
-    // Un nom déjà pris par le navigateur ou une extension reste intact : sx.<nom> marche toujours
-    if (name in window) continue
+    // `help` reste sous sx : la console de Firefox a son propre help(). Un nom déjà pris
+    // par le navigateur ou une extension reste intact lui aussi : sx.<nom> marche toujours.
+    if (name === 'help' || name in window) continue
     Object.defineProperty(window, name, { value: command, configurable: true, writable: true })
   }
 

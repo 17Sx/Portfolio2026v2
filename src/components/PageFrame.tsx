@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { SOCIAL } from '../constants/social.ts'
+import { isSectionId } from '../content/work.ts'
 import { useClock } from '../hooks/useClock.ts'
+import { SECTION_EVENT, useSectionJump } from '../hooks/useSectionJump.ts'
 import { useLanguage } from '../i18n/LanguageContext.tsx'
 import { useTheme } from '../hooks/useTheme.ts'
 import { CommandPalette } from './CommandPalette.tsx'
@@ -116,10 +118,21 @@ export function PageFrame() {
   const [palette, setPalette] = useState(false)
   const [mac, setMac] = useState(true)
   const archive = useLocation().pathname === '/experience'
+  const jump = useSectionJump()
 
   useEffect(() => {
     setMac(isMac())
   }, [])
+
+  useEffect(() => {
+    function onSectionEvent(event: Event) {
+      if (!(event instanceof CustomEvent)) return
+      const id: unknown = event.detail
+      if (isSectionId(id)) jump(id)
+    }
+    window.addEventListener(SECTION_EVENT, onSectionEvent)
+    return () => window.removeEventListener(SECTION_EVENT, onSectionEvent)
+  }, [jump])
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
