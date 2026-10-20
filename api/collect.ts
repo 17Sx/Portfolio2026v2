@@ -8,8 +8,8 @@ import {
   type SessionContext,
 } from '../shared/stats-schema.js'
 import { header, type ApiRequest, type ApiResponse } from './_lib/http.js'
-import { hashSecret, pipeline, redisConfigured } from './_lib/redis.js'
-import { RECORD_SCRIPT, keys, parisClock } from './_lib/schema.js'
+import { parisClock, scopes } from './_lib/schema.js'
+import { hashSecret, record, storeConfigured } from './_lib/store.js'
 import { botName, parseAgent } from './_lib/ua.js'
 
 const MAX_LEAVE_MS = 30 * 60_000
@@ -178,7 +178,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     res.status(405).end()
     return
   }
-  if (!redisConfigured()) {
+  if (!storeConfigured()) {
     res.status(204).end()
     return
   }
@@ -299,29 +299,15 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
     }
   }
 
-  const pairs = [...counts].flatMap(([field, by]) => [field, by])
   try {
-    await pipeline([
-      [
-        'EVAL',
-        RECORD_SCRIPT,
-        8,
-        keys.day(clock.day),
-        keys.month(clock.month),
-        keys.all,
-        keys.uniquesDay(clock.day),
-        keys.uniquesMonth(clock.month),
-        keys.live,
-        keys.feed,
-        keys.months,
-        visitor,
-        now,
-        sid,
-        feed ? JSON.stringify(feed) : '',
-        clock.month,
-        ...pairs,
-      ],
-    ])
+    await record({
+      counterScopes: [scopes.day(clock.day), scopes.month(clock.month), scopes.all],
+      counts: [...counts],
+      visitor: visitor ? { hash: visitor, scopes: [scopes.day(clock.day), scopes.month(clock.month)] } : null,
+      sid: sid || null,
+      feed,
+      now,
+    })
     res.status(204).end()
   } catch (error) {
     console.error('[collect]', error)

@@ -11,7 +11,7 @@ export type StatsState =
 async function getJson<T>(url: string, signal: AbortSignal): Promise<T> {
   const response = await fetch(url, { signal })
   if (response.status === 503) {
-    throw new Error('Storage is not configured: set KV_REST_API_URL and KV_REST_API_TOKEN on the server.')
+    throw new Error('Storage is not configured: connect a Neon Postgres database (DATABASE_URL) to the Vercel project.')
   }
   if (!response.ok) throw new Error(`The stats API answered ${response.status}.`)
   return response.json()

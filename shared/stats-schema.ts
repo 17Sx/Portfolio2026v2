@@ -1,5 +1,5 @@
 // Contract shared by the tracker (src/analytics), the collector (api/collect)
-// and the dashboard (src/stats). Aggregates live in Redis hashes whose fields
+// and the dashboard (src/stats). Aggregates are Postgres counters whose fields
 // are `${dim}|${value}`; only the first `|` separates them.
 
 export const FIELD_SEPARATOR = '|'
