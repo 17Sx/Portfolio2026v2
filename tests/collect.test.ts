@@ -1,6 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import handler, { outboundTarget, parseEvent, referrerSource, viewportClass } from '../api/collect.ts'
 import type { ApiRequest, ApiResponse } from '../api/_lib/http.ts'
+import { record, storeConfigured, type RecordInput } from '../api/_lib/store.ts'
+
+vi.mock('../api/_lib/store.ts', () => ({
+  hashSecret: () => 'secret',
+  record: vi.fn(),
+  storeConfigured: vi.fn(),
+}))
 
 const CHROME_MAC =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36'
@@ -109,36 +116,24 @@ function call(body: unknown, headers: Record<string, string> = {}) {
 }
 
 describe('collect handler', () => {
-  const fetchMock = vi.fn()
+  const recordMock = vi.mocked(record)
 
   beforeEach(() => {
-    vi.stubEnv('KV_REST_API_URL', 'https://redis.test')
-    vi.stubEnv('KV_REST_API_TOKEN', 'token')
-    fetchMock.mockResolvedValue(new Response(JSON.stringify([{ result: 1 }])))
-    vi.stubGlobal('fetch', fetchMock)
+    vi.mocked(storeConfigured).mockReturnValue(true)
+    recordMock.mockResolvedValue(undefined)
   })
 
   afterEach(() => {
-    vi.unstubAllEnvs()
-    vi.unstubAllGlobals()
-    fetchMock.mockReset()
+    vi.clearAllMocks()
   })
 
-  function evalArgs(): (string | number)[] {
-    const [url, init] = fetchMock.mock.calls[0]
-    expect(url).toBe('https://redis.test/pipeline')
-    const [command] = JSON.parse(init.body)
-    expect(command[0]).toBe('EVAL')
-    return command
+  function recorded(): RecordInput {
+    expect(recordMock).toHaveBeenCalledTimes(1)
+    return recordMock.mock.calls[0][0]
   }
 
   function increments(): Record<string, number> {
-    const args = evalArgs()
-    // EVAL script numkeys k1..k8 visitor now sid feed month, then field/increment pairs.
-    const pairs = args.slice(3 + 8 + 5)
-    const out: Record<string, number> = {}
-    for (let i = 0; i < pairs.length; i += 2) out[String(pairs[i])] = Number(pairs[i + 1])
-    return out
+    return Object.fromEntries(recorded().counts)
   }
 
   it('records a first pageview with its geo, agent and session dimensions', async () => {
@@ -170,9 +165,13 @@ describe('collect handler', () => {
       'dpr|2x': 1,
     })
     expect(fields['k|engaged']).toBeUndefined()
-    const args = evalArgs()
-    expect(String(args[11])).toMatch(/^[0-9a-f]{16}$/)
-    expect(JSON.stringify(args)).not.toContain('203.0.113.7')
+    const input = recorded()
+    expect(input.counterScopes).toEqual([expect.stringMatching(/^d:\d{4}-\d{2}-\d{2}$/), expect.stringMatching(/^m:\d{4}-\d{2}$/), 'all'])
+    expect(input.visitor?.hash).toMatch(/^[0-9a-f]{16}$/)
+    expect(input.visitor?.scopes).toEqual(input.counterScopes.slice(0, 2))
+    expect(input.sid).toBe('abc')
+    expect(input.feed).toMatchObject({ t: 'pv', path: '/', country: 'FR', city: 'Saint-Étienne', browser: 'Chrome' })
+    expect(JSON.stringify(input)).not.toContain('203.0.113.7')
   })
 
   it('counts the second pageview of a session as engaged and records the flow', async () => {
@@ -186,14 +185,13 @@ describe('collect handler', () => {
   it('files bots under bot|name only, without visitor, session or feed', async () => {
     await call({ t: 'pv', sid: 'abc', path: '/', n: 1, prev: null, wd: true, ctx })
     expect(increments()).toEqual({ 'bot|webdriver': 1 })
-    const args = evalArgs()
-    expect(args.slice(11, 16).map(String)).toEqual(['', expect.any(String), '', '', expect.stringMatching(/^\d{4}-\d{2}$/)])
+    expect(recorded()).toMatchObject({ visitor: null, sid: null, feed: null })
   })
 
   it('ignores non-pageview events from bots', async () => {
     const result = await call({ t: 'leave', sid: 'abc', path: '/', ms: 1000, scroll: 50 }, { 'user-agent': 'curl/8.4.0' })
     expect(result.status).toBe(204)
-    expect(fetchMock).not.toHaveBeenCalled()
+    expect(recordMock).not.toHaveBeenCalled()
   })
 
   it('buckets web vitals into histograms', async () => {
@@ -207,18 +205,19 @@ describe('collect handler', () => {
       'proto|h3': 1,
       'nav|navigate': 1,
     })
+    expect(recorded()).toMatchObject({ visitor: null, sid: 'a', feed: null })
   })
 
-  it('answers 400 on an invalid event and 502 when Redis fails', async () => {
+  it('answers 400 on an invalid event and 502 when the database fails', async () => {
     expect((await call('garbage')).status).toBe(400)
-    fetchMock.mockResolvedValue(new Response('down', { status: 500 }))
+    recordMock.mockRejectedValue(new Error('connection refused'))
     vi.spyOn(console, 'error').mockImplementation(() => undefined)
     expect((await call({ t: 'click', sid: 'a', path: '/', href: 'https://github.com/17Sx' })).status).toBe(502)
   })
 
-  it('is a silent no-op when Redis is not configured', async () => {
-    vi.stubEnv('KV_REST_API_URL', '')
+  it('is a silent no-op when no database is configured', async () => {
+    vi.mocked(storeConfigured).mockReturnValue(false)
     expect((await call({ t: 'click', sid: 'a', path: '/', href: 'https://github.com' })).status).toBe(204)
-    expect(fetchMock).not.toHaveBeenCalled()
+    expect(recordMock).not.toHaveBeenCalled()
   })
 })
