@@ -7,7 +7,8 @@ void main() {
 }
 `
 
-// Ordered (Bayer 8x8) dithering of the source, quantised to four greys.
+// Ordered (Bayer 8x8) dithering of the source, quantised to eight greys on a 1px grid,
+// so the grain stays fine and the scene reads through it.
 const FRAGMENT = `
 #ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
@@ -39,10 +40,9 @@ void main() {
 
   vec3 color = texture2D(u_source, clamp(uv, 0.0, 1.0)).rgb;
   float luma = pow(dot(color, vec3(0.299, 0.587, 0.114)), u_gamma);
-  luma = clamp((luma - 0.5) * 1.15 + 0.5, 0.0, 1.0);
 
   float threshold = bayer8(block) - 0.5;
-  float tone = clamp(floor(luma * 3.0 + threshold + 0.5) / 3.0, 0.0, 1.0);
+  float tone = clamp(floor(luma * 7.0 + threshold + 0.5) / 7.0, 0.0, 1.0);
 
   gl_FragColor = vec4(mix(vec3(0.035, 0.035, 0.04), vec3(0.98, 0.98, 0.97), tone), 1.0);
 }
@@ -145,7 +145,7 @@ export function DitherBanner({ theme, still }: { theme: 'light' | 'dark'; still:
       uploaded = true
       gl!.uniform2f(u.resolution, canvas!.width, canvas!.height)
       gl!.uniform2f(u.sourceSize, ...sourceSize(source!))
-      gl!.uniform1f(u.cell, Math.max(1, Math.round(2 * ratio)))
+      gl!.uniform1f(u.cell, Math.max(1, Math.round(ratio)))
       gl!.uniform1f(u.gamma, GAMMA[theme])
       gl!.drawArrays(gl!.TRIANGLES, 0, 3)
     }

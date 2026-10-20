@@ -27,7 +27,7 @@ function BannerClock() {
 
   return (
     <div
-      className="absolute right-4 bottom-4 flex items-center text-zinc-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)] dark:text-zinc-100 dark:drop-shadow-[0_1px_1px_rgba(0,0,0,0.9)]"
+      className="absolute right-3 bottom-3 flex items-center rounded-md bg-white/75 px-2 py-1.5 text-zinc-900 backdrop-blur-sm dark:bg-black/60 dark:text-zinc-100"
       aria-label={label}
     >
       <span className="font-doto text-[24px] leading-none font-bold tracking-[0.14em]">{time.h}</span>
