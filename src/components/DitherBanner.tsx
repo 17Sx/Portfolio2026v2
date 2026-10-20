@@ -177,6 +177,7 @@ export function DitherBanner({ theme, still }: { theme: 'light' | 'dark'; still:
     }
 
     const resize = () => {
+      if (failed) return
       const rect = canvas.getBoundingClientRect()
       ratio = Math.min(window.devicePixelRatio || 1, 2)
       canvas.width = Math.round(rect.width * ratio)
@@ -187,11 +188,7 @@ export function DitherBanner({ theme, still }: { theme: 'light' | 'dark'; still:
 
     // A lost context or an unplayable source ends the shader for good: free the context, the plain poster takes over.
     const fail = () => {
-      failed = true
-      cancelAnimationFrame(frame)
-      frame = 0
-      canvas.removeEventListener('webglcontextlost', fail)
-      release()
+      dispose()
       setFallback(true)
     }
 
@@ -214,8 +211,12 @@ export function DitherBanner({ theme, still }: { theme: 'light' | 'dark'; still:
     source.addEventListener('error', fail)
     canvas.addEventListener('webglcontextlost', fail)
 
-    return () => {
+    // Shared by the failure path and the effect cleanup; the second call is a no-op.
+    const dispose = () => {
+      if (failed) return
+      failed = true
       cancelAnimationFrame(frame)
+      frame = 0
       resizeObserver.disconnect()
       visibility.disconnect()
       source.removeEventListener(loaded, wake)
@@ -227,6 +228,8 @@ export function DitherBanner({ theme, still }: { theme: 'light' | 'dark'; still:
       gl.deleteProgram(program)
       release()
     }
+
+    return dispose
   }, [theme, still])
 
   const media = 'absolute inset-0 h-full w-full object-cover object-center'
