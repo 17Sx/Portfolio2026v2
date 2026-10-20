@@ -7,8 +7,7 @@ void main() {
 }
 `
 
-// Ordered (Bayer 8x8) dithering of the source, quantised to a few greys.
-// Around the pointer the cells grow and the image drops to two tones.
+// Ordered (Bayer 8x8) dithering of the source, quantised to four greys.
 const FRAGMENT = `
 #ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
@@ -19,8 +18,6 @@ precision mediump float;
 uniform sampler2D u_source;
 uniform vec2 u_resolution;
 uniform vec2 u_sourceSize;
-uniform vec2 u_pointer;
-uniform float u_hover;
 uniform float u_cell;
 uniform float u_gamma;
 
@@ -33,23 +30,19 @@ float bayer8(vec2 a) { return bayer4(0.5 * a) * 0.25 + bayer2(a); }
 
 void main() {
   vec2 frag = vec2(gl_FragCoord.x, u_resolution.y - gl_FragCoord.y);
-  float radius = u_resolution.y * 0.42;
-  float halo = u_hover * exp(-pow(distance(frag, u_pointer) / radius, 2.0));
-  float cell = floor(u_cell * (1.0 + 2.0 * smoothstep(0.15, 0.85, halo)) + 0.5);
-  vec2 block = floor(frag / cell);
+  vec2 block = floor(frag / u_cell);
 
   // object-fit: cover
   float scale = max(u_resolution.x / u_sourceSize.x, u_resolution.y / u_sourceSize.y);
   vec2 offset = (u_resolution - u_sourceSize * scale) * 0.5;
-  vec2 uv = ((block + 0.5) * cell - offset) / (u_sourceSize * scale);
+  vec2 uv = ((block + 0.5) * u_cell - offset) / (u_sourceSize * scale);
 
   vec3 color = texture2D(u_source, clamp(uv, 0.0, 1.0)).rgb;
   float luma = pow(dot(color, vec3(0.299, 0.587, 0.114)), u_gamma);
-  luma = clamp((luma - 0.5) * (1.15 + halo * 0.6) + 0.5, 0.0, 1.0);
+  luma = clamp((luma - 0.5) * 1.15 + 0.5, 0.0, 1.0);
 
-  float levels = mix(4.0, 2.0, step(0.5, halo));
   float threshold = bayer8(block) - 0.5;
-  float tone = clamp(floor(luma * (levels - 1.0) + threshold + 0.5) / (levels - 1.0), 0.0, 1.0);
+  float tone = clamp(floor(luma * 3.0 + threshold + 0.5) / 3.0, 0.0, 1.0);
 
   gl_FragColor = vec4(mix(vec3(0.035, 0.035, 0.04), vec3(0.98, 0.98, 0.97), tone), 1.0);
 }
@@ -137,8 +130,6 @@ export function DitherBanner({ theme, still }: { theme: 'light' | 'dark'; still:
     const u = {
       resolution: uniform('u_resolution'),
       sourceSize: uniform('u_sourceSize'),
-      pointer: uniform('u_pointer'),
-      hover: uniform('u_hover'),
       cell: uniform('u_cell'),
       gamma: uniform('u_gamma'),
     }
@@ -147,10 +138,6 @@ export function DitherBanner({ theme, still }: { theme: 'light' | 'dark'; still:
     let frame = 0
     let visible = false
     let uploaded = false
-    let hover = 0
-    let hoverTarget = 0
-    const pointer = { x: 0, y: 0 }
-    const eased = { x: 0, y: 0 }
 
     function draw() {
       if (!sourceReady(source!)) return
@@ -158,20 +145,14 @@ export function DitherBanner({ theme, still }: { theme: 'light' | 'dark'; still:
       uploaded = true
       gl!.uniform2f(u.resolution, canvas!.width, canvas!.height)
       gl!.uniform2f(u.sourceSize, ...sourceSize(source!))
-      gl!.uniform2f(u.pointer, eased.x * ratio, eased.y * ratio)
-      gl!.uniform1f(u.hover, hover)
       gl!.uniform1f(u.cell, Math.max(1, Math.round(2 * ratio)))
       gl!.uniform1f(u.gamma, GAMMA[theme])
       gl!.drawArrays(gl!.TRIANGLES, 0, 3)
     }
 
     function tick() {
-      eased.x += (pointer.x - eased.x) * 0.14
-      eased.y += (pointer.y - eased.y) * 0.14
-      hover += (hoverTarget - hover) * 0.08
       draw()
-      const settled = Math.abs(hoverTarget - hover) < 0.002 && Math.hypot(pointer.x - eased.x, pointer.y - eased.y) < 0.5
-      frame = visible && (!still || !settled || !uploaded) ? requestAnimationFrame(tick) : 0
+      frame = visible && (!still || !uploaded) ? requestAnimationFrame(tick) : 0
     }
 
     function wake() {
@@ -185,24 +166,6 @@ export function DitherBanner({ theme, still }: { theme: 'light' | 'dark'; still:
       canvas!.height = Math.round(rect.height * ratio)
       gl!.viewport(0, 0, canvas!.width, canvas!.height)
       draw()
-    }
-
-    // The banner sits under the page content, so the pointer is tracked on the window.
-    function onPointer(event: PointerEvent) {
-      const rect = canvas!.getBoundingClientRect()
-      const x = event.clientX - rect.left
-      const y = event.clientY - rect.top
-      const inside = event.pointerType === 'mouse' && x >= 0 && y >= 0 && x <= rect.width && y <= rect.height
-      if (inside) {
-        if (hoverTarget === 0) {
-          eased.x = x
-          eased.y = y
-        }
-        pointer.x = x
-        pointer.y = y
-      }
-      hoverTarget = inside ? 1 : 0
-      wake()
     }
 
     const resizeObserver = new ResizeObserver(resize)
@@ -221,16 +184,12 @@ export function DitherBanner({ theme, still }: { theme: 'light' | 'dark'; still:
 
     const onLoad = () => wake()
     source.addEventListener(still ? 'load' : 'loadeddata', onLoad)
-    window.addEventListener('pointermove', onPointer, { passive: true })
-    document.documentElement.addEventListener('pointerleave', onPointer)
 
     return () => {
       cancelAnimationFrame(frame)
       resizeObserver.disconnect()
       visibility.disconnect()
       source.removeEventListener(still ? 'load' : 'loadeddata', onLoad)
-      window.removeEventListener('pointermove', onPointer)
-      document.documentElement.removeEventListener('pointerleave', onPointer)
       gl.deleteTexture(texture)
       gl.deleteBuffer(buffer)
       gl.deleteProgram(program)
