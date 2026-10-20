@@ -1,6 +1,7 @@
 import { SOCIAL } from '../../constants/social.ts'
 import { useVisitorCount } from '../../hooks/useVisitorCount.ts'
 import { useLanguage } from '../../i18n/LanguageContext.tsx'
+import { DitherGrid } from '../../components/DitherGrid.tsx'
 import { Section } from '../../components/Section.tsx'
 
 export function HomeFooter() {
@@ -43,12 +44,13 @@ export function HomeFooter() {
   )
 }
 
+// The grid fills the whole block, from the dotted rule down to the bottom of the page, edge to edge of the column.
 export function ExtraFooter() {
-  const { t } = useLanguage()
-
   return (
     <Section id="extra-footer">
-      <p className="min-h-28 text-[15px] leading-relaxed text-zinc-500">{t.footer.extra}</p>
+      <div className="relative -mx-4 -mt-8 -mb-20 h-64">
+        <DitherGrid />
+      </div>
     </Section>
   )
 }

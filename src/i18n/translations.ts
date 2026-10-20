@@ -71,7 +71,6 @@ export const copy = {
       quote: 'I want to give myself the means to make a living from what I love.',
       rights: 'All rights reserved.',
       visitors: '{count} visitors',
-      extra: 'Another footer. This text is here so the block has a shape.',
     },
     palette: {
       label: 'Command palette',
@@ -166,7 +165,6 @@ export const copy = {
       quote: 'Je veux me donner les moyens de vivre de ce que j’aime.',
       rights: 'Tous droits réservés.',
       visitors: '{count} visites',
-      extra: 'Un footer en plus. Ce texte est là pour donner une forme au bloc.',
     },
     palette: {
       label: 'Palette de commandes',

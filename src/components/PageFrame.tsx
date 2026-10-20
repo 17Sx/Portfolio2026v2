@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { SOCIAL } from '../constants/social.ts'
 import { useClock } from '../hooks/useClock.ts'
 import { useLanguage } from '../i18n/LanguageContext.tsx'
 import { useTheme } from '../hooks/useTheme.ts'
 import { CommandPalette } from './CommandPalette.tsx'
 import { CareerTimeline } from './CareerTimeline.tsx'
+import { DitherBanner } from './DitherBanner.tsx'
 import { ArrowLeftIcon, MoonIcon, SunIcon } from './icons.tsx'
 import { IndexNav } from './IndexNav.tsx'
 import { Link, Outlet, useLocation } from 'react-router-dom'
@@ -26,7 +27,7 @@ function BannerClock() {
 
   return (
     <div
-      className="absolute right-4 bottom-4 flex items-center text-zinc-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.9)] dark:text-zinc-100 dark:drop-shadow-[0_1px_1px_rgba(0,0,0,0.9)]"
+      className="absolute right-3 bottom-3 flex items-center rounded-md bg-white/75 px-2 py-1.5 text-zinc-900 backdrop-blur-sm dark:bg-black/60 dark:text-zinc-100"
       aria-label={label}
     >
       <span className="font-doto text-[24px] leading-none font-bold tracking-[0.14em]">{time.h}</span>
@@ -64,9 +65,6 @@ const REDUCED_MOTION = '(prefers-reduced-motion: reduce)'
 
 function BannerMedia({ theme }: { theme: 'light' | 'dark' }) {
   const [still, setStill] = useState(() => matchMedia(REDUCED_MOTION).matches)
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const poster = `/banner/wanderer-${theme}.jpg`
-  const media = 'h-full w-full object-cover object-center'
 
   useEffect(() => {
     const query = matchMedia(REDUCED_MOTION)
@@ -75,35 +73,7 @@ function BannerMedia({ theme }: { theme: 'light' | 'dark' }) {
     return () => query.removeEventListener('change', onChange)
   }, [])
 
-  useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
-    const visibility = new IntersectionObserver(([entry]) => {
-      // Playback is driven by visibility only. A refused play() leaves the poster, the intended fallback.
-      if (entry.isIntersecting) void video.play().catch(() => {})
-      else video.pause()
-    })
-    visibility.observe(video)
-    return () => visibility.disconnect()
-  }, [theme, still])
-
-  if (still) return <img src={poster} alt="" className={media} />
-
-  return (
-    <video
-      key={theme}
-      ref={videoRef}
-      src={`/banner/wanderer-${theme}.mp4`}
-      poster={poster}
-      muted
-      loop
-      playsInline
-      disablePictureInPicture
-      disableRemotePlayback
-      aria-hidden
-      className={media}
-    />
-  )
+  return <DitherBanner theme={theme} still={still} />
 }
 
 function isMac() {
