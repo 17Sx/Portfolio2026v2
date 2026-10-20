@@ -9,7 +9,9 @@
     "noEmit": true,
     "strict": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true
   },
-  "include": ["api"]
+  "include": ["api", "shared", "tests/**/*.test.ts", "vitest.config.ts"]
 }
