@@ -185,12 +185,13 @@ export function DitherBanner({ theme, still }: { theme: 'light' | 'dark'; still:
       draw()
     }
 
-    // A lost context or an unplayable source ends the shader: the plain poster takes over.
-    const fail = (event: Event) => {
-      event.preventDefault()
+    // A lost context or an unplayable source ends the shader for good: free the context, the plain poster takes over.
+    const fail = () => {
       failed = true
       cancelAnimationFrame(frame)
       frame = 0
+      canvas.removeEventListener('webglcontextlost', fail)
+      release()
       setFallback(true)
     }
 
