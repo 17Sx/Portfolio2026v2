@@ -1,44 +1,13 @@
-// Redis layout. Every counter is written three times (day, month, all-time) so
-// any range is answered by a handful of HGETALL instead of a scan.
-export const keys = {
-  day: (day: string) => `st:d:${day}`,
-  month: (month: string) => `st:m:${month}`,
-  all: 'st:all',
-  uniquesDay: (day: string) => `st:uv:d:${day}`,
-  uniquesMonth: (month: string) => `st:uv:m:${month}`,
-  live: 'st:live',
-  feed: 'st:feed',
-  months: 'st:months',
+// Counter scopes. Every counter is written three times (day, month, all-time)
+// so any range is answered by reading a handful of scopes instead of a scan.
+export const scopes = {
+  day: (day: string) => `d:${day}`,
+  month: (month: string) => `m:${month}`,
+  all: 'all',
 }
 
 export const LIVE_WINDOW_MS = 5 * 60_000
 export const FEED_LENGTH = 100
-
-// KEYS: day, month, all, uniquesDay, uniquesMonth, live, feed, months
-// ARGV: visitorHash, nowMs, sid, feedJson, month, then field/increment pairs.
-// Empty strings skip the matching write.
-export const RECORD_SCRIPT = `
-if ARGV[1] ~= '' then
-  redis.call('PFADD', KEYS[4], ARGV[1])
-  redis.call('PFADD', KEYS[5], ARGV[1])
-end
-if ARGV[3] ~= '' then
-  redis.call('ZADD', KEYS[6], ARGV[2], ARGV[3])
-  redis.call('ZREMRANGEBYSCORE', KEYS[6], '-inf', tonumber(ARGV[2]) - ${LIVE_WINDOW_MS * 2})
-end
-if ARGV[4] ~= '' then
-  redis.call('LPUSH', KEYS[7], ARGV[4])
-  redis.call('LTRIM', KEYS[7], 0, ${FEED_LENGTH - 1})
-end
-redis.call('SADD', KEYS[8], ARGV[5])
-for i = 6, #ARGV, 2 do
-  local n = tonumber(ARGV[i + 1])
-  redis.call('HINCRBY', KEYS[1], ARGV[i], n)
-  redis.call('HINCRBY', KEYS[2], ARGV[i], n)
-  redis.call('HINCRBY', KEYS[3], ARGV[i], n)
-end
-return 1
-`
 
 export const TIME_ZONE = 'Europe/Paris'
 

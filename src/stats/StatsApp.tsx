@@ -38,7 +38,7 @@ function Dashboard({ data, range }: { data: StatsResponse; range: StatsRange }) 
     <div className="flex flex-col gap-10">
       <div className="grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-4">
         <Kpi label="Pageviews" value={formatNumber(pv)} sub={`${formatNumber(bots)} bot hits filtered`} />
-        <Kpi label="Visitors" value={formatNumber(data.uniques)} sub="HyperLogLog, daily salted hash" />
+        <Kpi label="Visitors" value={formatNumber(data.uniques)} sub="distinct daily salted hashes" />
         <Kpi label="Sessions" value={formatNumber(sessions)} sub={`${formatPercent((k.new ?? 0) / sessions)} first visits`} />
         <Kpi label="Bounce rate" value={formatPercent(1 - (k.engaged ?? 0) / sessions)} sub="sessions with a single page" />
         <Kpi label="Pages / session" value={sessions ? (pv / sessions).toFixed(2) : '–'} />
@@ -262,7 +262,7 @@ export default function StatsApp() {
             </button>
           ))}
           <span className="ml-auto self-center font-mono text-xs tabular-nums text-zinc-400 dark:text-zinc-500">
-            {state.status === 'loading' ? 'querying redis…' : state.data ? `generated ${new Date(state.data.generatedAt).toLocaleTimeString()}` : ''}
+            {state.status === 'loading' ? 'querying postgres…' : state.data ? `generated ${new Date(state.data.generatedAt).toLocaleTimeString()}` : ''}
           </span>
         </nav>
 
