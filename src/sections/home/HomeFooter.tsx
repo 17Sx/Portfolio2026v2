@@ -44,13 +44,11 @@ export function HomeFooter() {
   )
 }
 
+// The grid fills the whole block, from the dotted rule down to the bottom of the page, edge to edge of the column.
 export function ExtraFooter() {
-  const { t } = useLanguage()
-
   return (
     <Section id="extra-footer">
-      <p className="text-[15px] leading-relaxed text-zinc-500">{t.footer.extra}</p>
-      <div className="relative mt-6 h-40">
+      <div className="relative -mx-4 -mt-8 -mb-20 h-64">
         <DitherGrid />
       </div>
     </Section>
