@@ -29,10 +29,14 @@ let current = getInitialTheme()
 const listeners = new Set<() => void>()
 apply(current)
 
-function setTheme(theme: Theme) {
+export function setTheme(theme: Theme) {
   current = theme
   apply(theme)
   for (const listener of listeners) listener()
+}
+
+export function getTheme() {
+  return current
 }
 
 function toggle() {

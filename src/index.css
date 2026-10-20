@@ -79,6 +79,19 @@ html.dark ::selection {
   }
 }
 
+/* rm('-rf') dans la console : la page s'efface par paliers, puis le shell la restaure */
+@keyframes sx-wipe {
+  to {
+    opacity: 0;
+    filter: grayscale(1) contrast(1.6);
+    transform: translateY(12px) skewX(-2deg);
+  }
+}
+
+html.sx-wipe #root {
+  animation: sx-wipe 1.4s steps(10, end) forwards;
+}
+
 /* Pointillés serrés et discrets. Le point franc est posé au croisement. */
 .rule-dots {
   background-image: radial-gradient(circle, currentColor 0.4px, transparent 0.55px);

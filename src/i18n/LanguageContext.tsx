@@ -11,6 +11,9 @@ import { copy, type Lang } from './translations.ts'
 
 const STORAGE_KEY = 'portfolio-lang'
 
+/** Changement de langue demandé hors React (le shell de la console) : `detail` porte la langue */
+export const LANG_EVENT = 'portfolio:lang'
+
 type Messages = (typeof copy)['en'] | (typeof copy)['fr']
 
 type Ctx = {
@@ -36,17 +39,29 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>(() => readStoredLang())
 
   useEffect(() => {
-    document.documentElement.lang = lang === 'fr' ? 'fr' : 'en'
+    document.documentElement.lang = lang
   }, [lang])
 
   const setLang = useCallback((l: Lang) => {
     setLangState(l)
+    // Écrit tout de suite, sans attendre l'effet : le shell de la console relit l'attribut dans le même tour
+    document.documentElement.lang = l
     try {
       localStorage.setItem(STORAGE_KEY, l)
     } catch {
       /* ignore */
     }
   }, [])
+
+  useEffect(() => {
+    function onLangEvent(event: Event) {
+      if (!(event instanceof CustomEvent)) return
+      const next: unknown = event.detail
+      if (next === 'en' || next === 'fr') setLang(next)
+    }
+    window.addEventListener(LANG_EVENT, onLangEvent)
+    return () => window.removeEventListener(LANG_EVENT, onLangEvent)
+  }, [setLang])
 
   const toggleLang = useCallback(() => {
     setLang(lang === 'en' ? 'fr' : 'en')
