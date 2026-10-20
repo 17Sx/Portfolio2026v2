@@ -1,30 +1,22 @@
 import { Link } from 'react-router-dom'
-import { SOCIAL } from '../constants/social.ts'
 import { useLanguage } from '../i18n/LanguageContext.tsx'
 
 export default function NotFound() {
   const { t } = useLanguage()
-  const n = t.notFound
 
   return (
-    <div className="flex h-full flex-col items-center justify-center px-4 sm:px-6 py-16 text-center pb-20 md:pb-16">
-      <p className="font-mono text-4xl font-semibold text-ink">{n.title}</p>
-      <p className="mt-4 font-mono text-sm uppercase tracking-widest text-ink/60">{n.subtitle}</p>
-      <p className="mt-4 max-w-md font-mono text-sm leading-relaxed text-ink/45">
-        {n.description}
+    <div className="py-10">
+      <p className="text-[56px] leading-none font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+        {t.notFound.title}
       </p>
+      <p className="mt-4 text-[14px] tracking-[0.16em] text-zinc-400 uppercase">{t.notFound.subtitle}</p>
+      <p className="mt-3 max-w-sm text-[15px] leading-relaxed text-zinc-500">{t.notFound.description}</p>
       <Link
         to="/"
-        className="mt-10 font-mono text-sm uppercase tracking-widest text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-ink/60"
+        className="mt-8 inline-flex rounded-md bg-zinc-900 px-3 py-1.5 text-[13px] font-medium text-white dark:bg-white dark:text-zinc-900"
       >
-        {n.back}
+        {t.notFound.back}
       </Link>
-      <div className="mt-6 flex flex-wrap justify-center gap-6 font-mono text-xs uppercase tracking-widest text-ink/35">
-        <a href="/#experience" className="hover:text-ink/60">{n.links.experience}</a>
-        <Link to="/projects" className="hover:text-ink/60">{n.links.projects}</Link>
-        <Link to="/stack" className="hover:text-ink/60">Stack</Link>
-        <a href={SOCIAL.email} className="hover:text-ink/60">{n.links.contact}</a>
-      </div>
     </div>
   )
 }
