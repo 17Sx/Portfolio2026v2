@@ -6,6 +6,8 @@ import { SECTION_EVENT, useSectionJump } from '../hooks/useSectionJump.ts'
 import { useLanguage } from '../i18n/LanguageContext.tsx'
 import { useTheme } from '../hooks/useTheme.ts'
 import { CommandPalette } from './CommandPalette.tsx'
+import { EmailDispatch } from './EmailDispatch.tsx'
+import { isPaletteShortcut } from './paletteShortcut.ts'
 import { CareerTimeline } from './CareerTimeline.tsx'
 import { DitherBanner } from './DitherBanner.tsx'
 import { ArrowLeftIcon, MoonIcon, SunIcon } from './icons.tsx'
@@ -13,6 +15,9 @@ import { IndexNav } from './IndexNav.tsx'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 
 const column = 'right-0 left-0 md:right-[30%] md:left-[30%]'
+
+const keycap =
+  'inline-flex h-6 min-w-6 items-center justify-center rounded-md border border-black/10 bg-white px-1.5 text-zinc-800 shadow-[0_1px_0_rgba(0,0,0,0.14)] group-hover:border-black/25 dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-100 dark:shadow-[0_1px_0_rgba(255,255,255,0.12)] dark:group-hover:border-white/30'
 
 function Colon() {
   return (
@@ -54,7 +59,7 @@ function ArchiveHeading() {
         <ArrowLeftIcon className="size-4 transition-transform group-hover:-translate-x-0.5" />
       </Link>
       <div className="min-w-0">
-        <h1 className="mb-0.5 text-[20px] leading-none font-bold tracking-tight text-zinc-800 [text-shadow:-1.5px_0_0_rgba(0,200,255,0.3),1.5px_0_0_rgba(255,80,0,0.3)] sm:text-[24px] dark:text-zinc-100 dark:[text-shadow:-1.5px_0_0_rgba(0,200,255,0.6),1.5px_0_0_rgba(255,80,0,0.6)]">
+        <h1 className="mb-0.5 text-[20px] leading-none font-bold tracking-tight text-zinc-800 sm:text-[24px] dark:text-zinc-100">
           {t.experience.archiveTitle}
         </h1>
         <p className="truncate text-[12px] text-zinc-500 dark:text-zinc-400">{t.experience.archiveSubtitle}</p>
@@ -106,7 +111,7 @@ export function PageFrame() {
 
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+      if (isPaletteShortcut(event)) {
         event.preventDefault()
         setPalette((open) => !open)
       }
@@ -116,100 +121,102 @@ export function PageFrame() {
   }, [])
 
   return (
-    <div className={archive ? 'experience-hero' : undefined}>
-      <IndexNav />
-      <CommandPalette open={palette} onClose={() => setPalette(false)} />
-      <div className="relative min-h-screen overflow-x-hidden bg-white text-zinc-800 antialiased dark:bg-black dark:text-zinc-100">
-        <div
-          aria-hidden
-          className="rule-dots rule-dots-y pointer-events-none absolute inset-y-0 left-[30%] hidden -translate-x-1/2 md:block"
-        />
-        <div
-          aria-hidden
-          className="rule-dots rule-dots-y pointer-events-none absolute inset-y-0 right-[30%] hidden -translate-x-1/2 md:block"
-        />
+    <EmailDispatch>
+      <div className={archive ? 'experience-hero' : undefined}>
+        <IndexNav />
+        <CommandPalette open={palette} onClose={() => setPalette(false)} />
+        <div className="relative min-h-screen overflow-x-hidden bg-white text-zinc-800 antialiased dark:bg-black dark:text-zinc-100">
+          <div
+            aria-hidden
+            className="rule-dots rule-dots-y pointer-events-none absolute inset-y-0 left-[30%] hidden -translate-x-1/2 md:block"
+          />
+          <div
+            aria-hidden
+            className="rule-dots rule-dots-y pointer-events-none absolute inset-y-0 right-[30%] hidden -translate-x-1/2 md:block"
+          />
 
-        <div
-          className={`absolute top-0 ${column} h-[var(--banner-h)] ${
-            archive ? 'z-20 bg-white dark:bg-black' : 'z-0 overflow-hidden bg-zinc-100 dark:bg-black'
-          }`}
-        >
-          {archive ? (
-            <CareerTimeline />
-          ) : (
-            <>
-              <BannerMedia theme={theme} />
-              <BannerClock />
-            </>
-          )}
-        </div>
-
-        <header className={`absolute top-[var(--banner-h)] ${column} z-40 flex h-[var(--profile-h)] items-stretch px-4`}>
-          <div className="flex h-full w-full items-start justify-between gap-3">
-            {archive ? <ArchiveHeading /> : null}
-            <div className={`flex h-full min-w-0 items-end gap-3.5 sm:gap-4 ${archive ? 'hidden' : ''}`}>
-              <a
-                href={SOCIAL.github}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="GitHub"
-                className="relative z-10 mb-1 size-[72px] shrink-0 -translate-y-16 overflow-hidden rounded-xl border border-black/10 bg-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] sm:size-[88px] dark:border-white/15"
-              >
-                <img src={`${SOCIAL.github}.png`} alt="" className="h-full w-full object-cover" />
-              </a>
-              {/* Entre md et lg la colonne centrale est trop étroite pour le nom à côté des contrôles : il reste en bas */}
-              <div className="min-w-0 self-start pt-2.5 md:self-end md:pt-0 md:pb-3 lg:self-start lg:pt-2.5 lg:pb-0">
-                <h1 className="text-[22px] leading-none font-bold tracking-tight text-zinc-900 [text-shadow:-1.5px_0_0_rgba(0,200,255,0.35),1.5px_0_0_rgba(255,80,0,0.35)] sm:text-[24px] dark:text-zinc-50 dark:[text-shadow:-1.5px_0_0_rgba(0,200,255,0.65),1.5px_0_0_rgba(255,80,0,0.65)]">
-                  {t.nav.name}
-                </h1>
-                <p className="mt-1 truncate text-[13px] text-zinc-500">{t.profile.role}</p>
-              </div>
-            </div>
-            <div className="flex shrink-0 items-center gap-2 pt-1.5">
-              <div className="mr-1 flex items-center font-mono text-[11px] tracking-[0.16em]">
-                <button
-                  type="button"
-                  onClick={() => setLang('en')}
-                  className={lang === 'en' ? 'text-zinc-900 dark:text-zinc-100' : 'text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'}
-                >
-                  EN
-                </button>
-                <span className="mx-1 text-zinc-300 dark:text-zinc-600">/</span>
-                <button
-                  type="button"
-                  onClick={() => setLang('fr')}
-                  className={lang === 'fr' ? 'text-zinc-900 dark:text-zinc-100' : 'text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'}
-                >
-                  FR
-                </button>
-              </div>
-              <button
-                type="button"
-                onClick={() => setPalette(true)}
-                aria-haspopup="dialog"
-                aria-label={t.palette.label}
-                className="inline-flex items-center gap-1 rounded-md border border-black/10 bg-zinc-50 px-1.5 py-1 text-[11px] text-zinc-500 transition hover:border-black/20 hover:text-zinc-800 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
-              >
-                <span className="px-0.5">{mac ? '⌘' : 'Ctrl'}</span>
-                <span className="rounded bg-black/5 px-1 py-px dark:bg-white/10">K</span>
-              </button>
-              <button
-                type="button"
-                onClick={toggle}
-                aria-label={t.theme}
-                aria-pressed={theme === 'dark'}
-                className="flex size-7 items-center justify-center text-zinc-500 transition hover:text-zinc-900 dark:hover:text-zinc-200"
-              >
-                {theme === 'dark' ? <SunIcon className="size-[18px]" /> : <MoonIcon className="size-[18px]" />}
-              </button>
-            </div>
+          <div
+            className={`absolute top-0 ${column} h-[var(--banner-h)] ${
+              archive ? 'z-20 bg-white dark:bg-black' : 'z-0 overflow-hidden bg-zinc-100 dark:bg-black'
+            }`}
+          >
+            {archive ? (
+              <CareerTimeline />
+            ) : (
+              <>
+                <BannerMedia theme={theme} />
+                <BannerClock />
+              </>
+            )}
           </div>
-        </header>
 
-        <main className="relative z-10 px-4 pt-[calc(var(--banner-h)+var(--profile-h)+8px)] pb-20 md:mr-[30%] md:ml-[30%]">
-          <Outlet />
-        </main>
+          <header className={`absolute top-[var(--banner-h)] ${column} z-40 flex h-[var(--profile-h)] items-stretch px-4`}>
+            <div className="flex h-full w-full items-start justify-between gap-3">
+              {archive ? <ArchiveHeading /> : null}
+              <div className={`flex h-full min-w-0 items-end gap-3.5 sm:gap-4 ${archive ? 'hidden' : ''}`}>
+                <a
+                  href={SOCIAL.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="GitHub"
+                  className="relative z-10 mb-1 size-[72px] shrink-0 -translate-y-16 overflow-hidden rounded-xl border border-black/10 bg-white shadow-[0_8px_24px_rgba(0,0,0,0.18)] sm:size-[88px] dark:border-white/15"
+                >
+                  <img src={`${SOCIAL.github}.png`} alt="" className="h-full w-full object-cover" />
+                </a>
+                {/* Entre md et lg la colonne centrale est trop étroite pour le nom à côté des contrôles : il reste en bas */}
+                <div className="min-w-0 self-start pt-2.5 md:self-end md:pt-0 md:pb-3 lg:self-start lg:pt-2.5 lg:pb-0">
+                  <h1 className="text-[22px] leading-none font-bold tracking-tight text-zinc-900 sm:text-[24px] dark:text-zinc-50">
+                    {t.nav.name}
+                  </h1>
+                  <p className="mt-1 truncate text-[13px] text-zinc-500">{t.profile.role}</p>
+                </div>
+              </div>
+              <div className="flex shrink-0 items-center gap-2 pt-1.5">
+                <div className="mr-1 flex items-center font-mono text-[11px] tracking-[0.16em]">
+                  <button
+                    type="button"
+                    onClick={() => setLang('en')}
+                    className={lang === 'en' ? 'text-zinc-900 dark:text-zinc-100' : 'text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'}
+                  >
+                    EN
+                  </button>
+                  <span className="mx-1 text-zinc-300 dark:text-zinc-600">/</span>
+                  <button
+                    type="button"
+                    onClick={() => setLang('fr')}
+                    className={lang === 'fr' ? 'text-zinc-900 dark:text-zinc-100' : 'text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'}
+                  >
+                    FR
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setPalette(true)}
+                  aria-haspopup="dialog"
+                  aria-label={t.palette.label}
+                  className="group inline-flex items-center gap-1 transition-transform duration-150 ease-out active:translate-y-px"
+                >
+                  <kbd className={`${keycap} font-sans text-[12px]`}>{mac ? '⌘' : 'Ctrl'}</kbd>
+                  <kbd className={`${keycap} font-doto text-[15px] leading-none font-bold tracking-[0.08em]`}>K</kbd>
+                </button>
+                <button
+                  type="button"
+                  onClick={toggle}
+                  aria-label={t.theme}
+                  aria-pressed={theme === 'dark'}
+                  className="flex size-7 items-center justify-center text-zinc-500 transition hover:text-zinc-900 dark:hover:text-zinc-200"
+                >
+                  {theme === 'dark' ? <SunIcon className="size-[18px]" /> : <MoonIcon className="size-[18px]" />}
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <main className="relative z-10 px-4 pt-[calc(var(--banner-h)+var(--profile-h)+8px)] pb-20 md:mr-[30%] md:ml-[30%]">
+            <Outlet />
+          </main>
+        </div>
       </div>
-    </div>
+    </EmailDispatch>
   )
 }

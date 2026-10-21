@@ -1,4 +1,6 @@
 import { SOCIAL } from '../../constants/social.ts'
+import { isPlainClick } from '../../components/emailSequence.ts'
+import { useSendEmail } from '../../components/EmailDispatch.tsx'
 import { useVisitorCount } from '../../hooks/useVisitorCount.ts'
 import { useLanguage } from '../../i18n/LanguageContext.tsx'
 import { DitherGrid } from '../../components/DitherGrid.tsx'
@@ -6,6 +8,7 @@ import { Section } from '../../components/Section.tsx'
 
 export function HomeFooter() {
   const { t, lang } = useLanguage()
+  const sendEmail = useSendEmail()
   const count = useVisitorCount()
   const year = new Date().getFullYear()
 
@@ -28,7 +31,15 @@ export function HomeFooter() {
         <a href={SOCIAL.twitter} target="_blank" rel="noreferrer" className="hover:text-zinc-900 dark:hover:text-zinc-100">
           X
         </a>
-        <a href={SOCIAL.email} className="hover:text-zinc-900 dark:hover:text-zinc-100">
+        <a
+          href={SOCIAL.email}
+          onClick={(event) => {
+            if (!isPlainClick(event)) return
+            event.preventDefault()
+            sendEmail()
+          }}
+          className="hover:text-zinc-900 dark:hover:text-zinc-100"
+        >
           Email
         </a>
       </div>
