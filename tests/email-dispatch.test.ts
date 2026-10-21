@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { SOCIAL } from '../src/constants/social.ts'
 import {
   CELL_COUNT,
@@ -8,9 +8,11 @@ import {
   ENTER_MS,
   EXIT_MS,
   HOLD_MS,
+  armDispatch,
   cellOrder,
   dispatchTimeline,
   emailAddress,
+  isPaletteShortcut,
   isPlainClick,
 } from '../src/components/emailSequence.ts'
 
@@ -28,7 +30,33 @@ describe('email dispatch', () => {
     expect(isPlainClick({ ...plain, metaKey: true })).toBe(false)
     expect(isPlainClick({ ...plain, ctrlKey: true })).toBe(false)
     expect(isPlainClick({ ...plain, shiftKey: true })).toBe(false)
+    expect(isPlainClick({ ...plain, altKey: true })).toBe(false)
     expect(isPlainClick({ ...plain, button: 1 })).toBe(false)
+  })
+
+  it('recognises the palette shortcut', () => {
+    expect(isPaletteShortcut({ key: 'k', metaKey: true, ctrlKey: false })).toBe(true)
+    expect(isPaletteShortcut({ key: 'K', metaKey: false, ctrlKey: true })).toBe(true)
+    expect(isPaletteShortcut({ key: 'k', metaKey: false, ctrlKey: false })).toBe(false)
+    expect(isPaletteShortcut({ key: 'Escape', metaKey: true, ctrlKey: false })).toBe(false)
+  })
+
+  it('never sends once the slip is cancelled', () => {
+    vi.useFakeTimers()
+    const kinds: string[] = []
+    const cancel = armDispatch('ab', (event) => kinds.push(event.kind))
+    vi.advanceTimersByTime(ENTER_MS + CHAR_MS)
+    cancel()
+    vi.advanceTimersByTime(ENTER_MS + 2 * CHAR_MS + CELL_COUNT * CELL_MS + HOLD_MS + EXIT_MS)
+    expect(kinds).toEqual(['typed'])
+  })
+
+  it('sends when the slip runs to the end', () => {
+    vi.useFakeTimers()
+    const kinds: string[] = []
+    armDispatch('ab', (event) => kinds.push(event.kind))
+    vi.advanceTimersByTime(ENTER_MS + 2 * CHAR_MS + CELL_COUNT * CELL_MS + HOLD_MS + EXIT_MS)
+    expect(kinds.at(-1)).toBe('send')
   })
 
   it('lights the stamp in dither order', () => {
@@ -56,4 +84,8 @@ describe('email dispatch', () => {
       kind: 'send',
     })
   })
+})
+
+afterEach(() => {
+  vi.useRealTimers()
 })

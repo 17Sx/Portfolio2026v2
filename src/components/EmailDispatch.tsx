@@ -7,8 +7,9 @@ import {
   ENTER_MS,
   EXIT_MS,
   STAMP_COLS,
+  armDispatch,
   cellOrder,
-  dispatchTimeline,
+  isPaletteShortcut,
 } from './emailSequence.ts'
 
 const REDUCED_MOTION = '(prefers-reduced-motion: reduce)'
@@ -64,36 +65,42 @@ export function EmailDispatch({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (run === 0) return
     const previousOverflow = document.body.style.overflow
+    const returnTo = document.activeElement instanceof HTMLElement ? document.activeElement : null
     document.body.style.overflow = 'hidden'
     panelRef.current?.focus()
-    const timers = dispatchTimeline(EMAIL_ADDRESS).map((event) =>
-      window.setTimeout(() => {
-        if (event.kind === 'typed') setTyped(event.count)
-        else if (event.kind === 'lit') setLit(event.count)
-        else if (event.kind === 'exit') setExiting(true)
-        else {
-          openMail()
-          setRun(0)
-        }
-      }, event.at),
-    )
+    const cancelTimers = armDispatch(EMAIL_ADDRESS, (event) => {
+      if (event.kind === 'typed') setTyped(event.count)
+      else if (event.kind === 'lit') setLit(event.count)
+      else if (event.kind === 'exit') setExiting(true)
+      else {
+        openMail()
+        setRun(0)
+      }
+    })
     return () => {
       document.body.style.overflow = previousOverflow
-      for (const timer of timers) window.clearTimeout(timer)
+      cancelTimers()
+      if (returnTo?.isConnected) returnTo.focus()
     }
   }, [run])
 
   useEffect(() => {
     if (run === 0) return
     function onKey(event: KeyboardEvent) {
+      if (isPaletteShortcut(event)) {
+        event.preventDefault()
+        event.stopImmediatePropagation()
+        return
+      }
       if (event.key === 'Escape') {
         event.preventDefault()
         cancel()
       }
       if (event.key === 'Tab') event.preventDefault()
     }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    // Capture runs before the palette shortcut, which listens on the same window.
+    window.addEventListener('keydown', onKey, true)
+    return () => window.removeEventListener('keydown', onKey, true)
   }, [cancel, run])
 
   const api = useMemo(() => ({ sendEmail }), [sendEmail])

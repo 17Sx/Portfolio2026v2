@@ -33,7 +33,11 @@ export function isPlainClick(event: PointerButtons): boolean {
   return event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey
 }
 
-// Same ordered dither as the banner, so the stamp lights in that order rather than left to right.
+export function isPaletteShortcut(event: { key: string; metaKey: boolean; ctrlKey: boolean }): boolean {
+  return (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k'
+}
+
+// Same bit-interleave as DitherGrid, so the stamp lights in dither order rather than left to right.
 function bayerThreshold(index: number): number {
   const x = index % STAMP_COLS
   const y = Math.floor(index / STAMP_COLS)
@@ -72,4 +76,11 @@ export function dispatchTimeline(address: string): DispatchEvent[] {
   at += EXIT_MS
   events.push({ at, kind: 'send' })
   return events
+}
+
+export function armDispatch(address: string, onEvent: (event: DispatchEvent) => void): () => void {
+  const timers = dispatchTimeline(address).map((event) => setTimeout(() => onEvent(event), event.at))
+  return () => {
+    for (const timer of timers) clearTimeout(timer)
+  }
 }
