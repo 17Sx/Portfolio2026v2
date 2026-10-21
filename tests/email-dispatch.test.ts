@@ -12,9 +12,9 @@ import {
   cellOrder,
   dispatchTimeline,
   emailAddress,
-  isPaletteShortcut,
   isPlainClick,
 } from '../src/components/emailSequence.ts'
+import { isPaletteShortcut } from '../src/components/paletteShortcut.ts'
 
 const plain = { button: 0, metaKey: false, ctrlKey: false, shiftKey: false, altKey: false }
 

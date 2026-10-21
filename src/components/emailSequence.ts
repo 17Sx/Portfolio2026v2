@@ -33,10 +33,6 @@ export function isPlainClick(event: PointerButtons): boolean {
   return event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey
 }
 
-export function isPaletteShortcut(event: { key: string; metaKey: boolean; ctrlKey: boolean }): boolean {
-  return (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k'
-}
-
 // Same bit-interleave as DitherGrid, so the stamp lights in dither order rather than left to right.
 function bayerThreshold(index: number): number {
   const x = index % STAMP_COLS

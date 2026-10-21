@@ -9,8 +9,8 @@ import {
   STAMP_COLS,
   armDispatch,
   cellOrder,
-  isPaletteShortcut,
 } from './emailSequence.ts'
+import { isPaletteShortcut } from './paletteShortcut.ts'
 
 const REDUCED_MOTION = '(prefers-reduced-motion: reduce)'
 
