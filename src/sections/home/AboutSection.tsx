@@ -1,5 +1,7 @@
 import { SOCIAL } from '../../constants/social.ts'
 import { resumeHref } from '../../content/work.ts'
+import { isPlainClick } from '../../components/emailSequence.ts'
+import { useSendEmail } from '../../components/EmailDispatch.tsx'
 import { useLanguage } from '../../i18n/LanguageContext.tsx'
 import { FileIcon, GitHubIcon, LinkedInIcon, MailIcon, XIcon } from '../../components/icons.tsx'
 import { Rich } from '../../components/RichText.tsx'
@@ -9,6 +11,7 @@ const pill =
 
 export function AboutSection() {
   const { t, lang } = useLanguage()
+  const sendEmail = useSendEmail()
 
   return (
     <section id="about" className="pt-2">
@@ -31,6 +34,11 @@ export function AboutSection() {
       <div className="mt-6 flex flex-wrap gap-2">
         <a
           href={SOCIAL.email}
+          onClick={(event) => {
+            if (!isPlainClick(event)) return
+            event.preventDefault()
+            sendEmail()
+          }}
           className="inline-flex items-center gap-2 rounded-md bg-zinc-900 px-3 py-1.5 text-[13px] font-medium text-white transition hover:bg-zinc-700 active:scale-[0.98] dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
         >
           <MailIcon className="size-3.5" />

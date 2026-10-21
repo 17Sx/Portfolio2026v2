@@ -114,3 +114,85 @@ html.dark .rule-dots {
   background-size: 2px 4px;
   background-position: center;
 }
+
+@keyframes dispatch-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes dispatch-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+}
+
+@keyframes dispatch-scrim-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dispatch-scrim-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes dispatch-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+.dispatch-in,
+.dispatch-scrim {
+  animation-name: dispatch-in;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+  animation-fill-mode: both;
+}
+
+.dispatch-scrim {
+  animation-name: dispatch-scrim-in;
+}
+
+.dispatch-out,
+.dispatch-scrim-out {
+  animation-name: dispatch-out;
+  animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+  animation-fill-mode: both;
+}
+
+.dispatch-scrim-out {
+  animation-name: dispatch-scrim-out;
+}
+
+.dispatch-caret {
+  animation: dispatch-caret 900ms steps(1, end) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dispatch-in,
+  .dispatch-out,
+  .dispatch-scrim,
+  .dispatch-scrim-out,
+  .dispatch-caret {
+    animation: none;
+  }
+}

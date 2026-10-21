@@ -4,6 +4,7 @@ import { resumeHref, SECTION_IDS } from '../content/work.ts'
 import { useLanguage } from '../i18n/LanguageContext.tsx'
 import { useSectionJump } from '../hooks/useSectionJump.ts'
 import { useTheme } from '../hooks/useTheme.ts'
+import { useSendEmail } from './EmailDispatch.tsx'
 import { SearchIcon } from './icons.tsx'
 
 type Command = {
@@ -21,6 +22,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
   const inputRef = useRef<HTMLInputElement>(null)
   const listId = useId()
   const jump = useSectionJump()
+  const sendEmail = useSendEmail()
 
   const commands = useMemo<Command[]>(() => {
     const go = (id: string) => {
@@ -66,7 +68,8 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
         group: t.palette.contact,
         label: t.palette.email,
         run: () => {
-          window.location.href = SOCIAL.email
+          onClose()
+          sendEmail()
         },
       },
       {
@@ -106,7 +109,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
         },
       },
     ]
-  }, [jump, lang, onClose, t, theme, toggle, toggleLang])
+  }, [jump, lang, onClose, sendEmail, t, theme, toggle, toggleLang])
 
   const results = useMemo(() => {
     const needle = query.trim().toLowerCase()
@@ -181,8 +184,11 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
             placeholder={t.palette.placeholder}
             aria-controls={listId}
             aria-activedescendant={active ? `${listId}-${active.id}` : undefined}
-            className="h-12 w-full bg-transparent text-[15px] text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
+            className="h-12 w-full min-w-0 bg-transparent text-[15px] text-zinc-900 outline-none placeholder:text-zinc-400 dark:text-zinc-100"
           />
+          <span aria-hidden className="font-doto pr-1 text-[12px] leading-none font-bold tracking-[0.2em] text-zinc-300 dark:text-zinc-600">
+            NOA
+          </span>
         </div>
         <ul id={listId} role="listbox" className="max-h-[320px] overflow-auto p-1.5">
           {results.length === 0 ? (
@@ -195,7 +201,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
               return (
                 <li key={command.id} role="presentation">
                   {showGroup ? (
-                    <p className="px-2 pt-2 pb-1 text-[11px] tracking-[0.14em] text-zinc-400 uppercase">
+                    <p className="font-doto px-2 pt-2.5 pb-1 text-[12px] leading-none font-bold tracking-[0.18em] text-zinc-400 uppercase">
                       {command.group}
                     </p>
                   ) : null}

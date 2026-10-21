@@ -6,6 +6,7 @@ import { SECTION_EVENT, useSectionJump } from '../hooks/useSectionJump.ts'
 import { useLanguage } from '../i18n/LanguageContext.tsx'
 import { useTheme } from '../hooks/useTheme.ts'
 import { CommandPalette } from './CommandPalette.tsx'
+import { EmailDispatch } from './EmailDispatch.tsx'
 import { CareerTimeline } from './CareerTimeline.tsx'
 import { DitherBanner } from './DitherBanner.tsx'
 import { ArrowLeftIcon, MoonIcon, SunIcon } from './icons.tsx'
@@ -13,6 +14,9 @@ import { IndexNav } from './IndexNav.tsx'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 
 const column = 'right-0 left-0 md:right-[30%] md:left-[30%]'
+
+const keycap =
+  'inline-flex h-6 min-w-6 items-center justify-center rounded-md border border-black/10 bg-white px-1.5 text-zinc-800 shadow-[0_1px_0_rgba(0,0,0,0.14)] group-hover:border-black/25 dark:border-white/15 dark:bg-zinc-900 dark:text-zinc-100 dark:shadow-[0_1px_0_rgba(255,255,255,0.12)] dark:group-hover:border-white/30'
 
 function Colon() {
   return (
@@ -54,7 +58,7 @@ function ArchiveHeading() {
         <ArrowLeftIcon className="size-4 transition-transform group-hover:-translate-x-0.5" />
       </Link>
       <div className="min-w-0">
-        <h1 className="mb-0.5 text-[20px] leading-none font-bold tracking-tight text-zinc-800 [text-shadow:-1.5px_0_0_rgba(0,200,255,0.3),1.5px_0_0_rgba(255,80,0,0.3)] sm:text-[24px] dark:text-zinc-100 dark:[text-shadow:-1.5px_0_0_rgba(0,200,255,0.6),1.5px_0_0_rgba(255,80,0,0.6)]">
+        <h1 className="mb-0.5 text-[20px] leading-none font-bold tracking-tight text-zinc-800 sm:text-[24px] dark:text-zinc-100">
           {t.experience.archiveTitle}
         </h1>
         <p className="truncate text-[12px] text-zinc-500 dark:text-zinc-400">{t.experience.archiveSubtitle}</p>
@@ -116,6 +120,7 @@ export function PageFrame() {
   }, [])
 
   return (
+    <EmailDispatch>
     <div className={archive ? 'experience-hero' : undefined}>
       <IndexNav />
       <CommandPalette open={palette} onClose={() => setPalette(false)} />
@@ -159,7 +164,7 @@ export function PageFrame() {
               </a>
               {/* Entre md et lg la colonne centrale est trop étroite pour le nom à côté des contrôles : il reste en bas */}
               <div className="min-w-0 self-start pt-2.5 md:self-end md:pt-0 md:pb-3 lg:self-start lg:pt-2.5 lg:pb-0">
-                <h1 className="text-[22px] leading-none font-bold tracking-tight text-zinc-900 [text-shadow:-1.5px_0_0_rgba(0,200,255,0.35),1.5px_0_0_rgba(255,80,0,0.35)] sm:text-[24px] dark:text-zinc-50 dark:[text-shadow:-1.5px_0_0_rgba(0,200,255,0.65),1.5px_0_0_rgba(255,80,0,0.65)]">
+                <h1 className="text-[22px] leading-none font-bold tracking-tight text-zinc-900 sm:text-[24px] dark:text-zinc-50">
                   {t.nav.name}
                 </h1>
                 <p className="mt-1 truncate text-[13px] text-zinc-500">{t.profile.role}</p>
@@ -188,10 +193,10 @@ export function PageFrame() {
                 onClick={() => setPalette(true)}
                 aria-haspopup="dialog"
                 aria-label={t.palette.label}
-                className="inline-flex items-center gap-1 rounded-md border border-black/10 bg-zinc-50 px-1.5 py-1 text-[11px] text-zinc-500 transition hover:border-black/20 hover:text-zinc-800 dark:border-white/10 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100"
+                className="group inline-flex items-center gap-1 transition-transform duration-150 ease-out active:translate-y-px"
               >
-                <span className="px-0.5">{mac ? '⌘' : 'Ctrl'}</span>
-                <span className="rounded bg-black/5 px-1 py-px dark:bg-white/10">K</span>
+                <kbd className={`${keycap} font-sans text-[12px]`}>{mac ? '⌘' : 'Ctrl'}</kbd>
+                <kbd className={`${keycap} font-doto text-[15px] leading-none font-bold tracking-[0.08em]`}>K</kbd>
               </button>
               <button
                 type="button"
@@ -211,5 +216,6 @@ export function PageFrame() {
         </main>
       </div>
     </div>
+    </EmailDispatch>
   )
 }

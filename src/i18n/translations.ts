@@ -203,6 +203,10 @@ export const copy = {
       open: 'open',
       close: 'close',
     },
+    dispatch: {
+      kicker: 'Dispatch',
+      status: 'Opening your mail app',
+    },
     theme: 'Toggle theme',
     notFound: {
       title: '404',
@@ -296,6 +300,10 @@ export const copy = {
       move: 'naviguer',
       open: 'ouvrir',
       close: 'fermer',
+    },
+    dispatch: {
+      kicker: 'Envoi',
+      status: 'Ouverture de la messagerie',
     },
     theme: 'Changer de thème',
     notFound: {
