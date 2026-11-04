@@ -38,20 +38,20 @@ export const experiences: Experience[] = [
     tile: 'light',
     color: '#3f7dfb',
     company: { en: 'Impulse Lab', fr: 'Impulse Lab' },
-    role: { en: 'Web developer · Internship', fr: 'Développeur web · Stage' },
+    role: { en: 'Software Engineer · Apprenticeship', fr: 'Ingénieur logiciel · Alternance' },
     period: { en: 'Sep 2026 - Present', fr: 'Sep 2026 - Présent' },
     start: '2026-09',
     end: null,
     url: 'https://impulselab.ai',
     bullets: [
       {
-        en: 'Custom apps, AI integrations, and products that actually reach production.',
-        fr: 'Apps sur mesure, intégrations IA, et des produits qui partent vraiment en prod.',
+        en: 'Custom apps, AI integrations, and products.',
+        fr: 'Apps sur mesure, intégrations IA.',
       },
       {
-        en: 'Interfaces that feel fast, and data models that stay honest.',
-        fr: 'Des interfaces qui réagissent vite, et des modèles de données qui restent honnêtes.',
-      },
+        en: 'Interfaces that feel fast.',
+        fr: 'Des interfaces qui réagissent vite.',
+      },  
     ],
     tags: [],
   },
@@ -62,7 +62,7 @@ export const experiences: Experience[] = [
     tile: 'dark',
     color: '#0f766e',
     company: { en: 'Altiora', fr: 'Altiora' },
-    role: { en: 'Founder & developer', fr: 'Fondateur développeur' },
+    role: { en: 'Founder & Software Engineer', fr: 'Fondateur & ingénieur logiciel' },
     period: { en: 'May 2025 - Present', fr: 'Mai 2025 - Présent' },
     start: '2025-05',
     end: null,
@@ -87,7 +87,7 @@ export const experiences: Experience[] = [
     color: '#d97706',
     logoFit: 'cover',
     company: { en: 'PALM MANAGING PROJECT', fr: 'PALM MANAGING PROJECT' },
-    role: { en: 'Web developer · Apprenticeship', fr: 'Développeur web · Alternance' },
+    role: { en: 'Software Engineer · Apprenticeship', fr: 'Ingénieur logiciel · Alternance' },
     period: { en: 'Apr 2025 - Sep 2026', fr: 'Avr 2025 - Sep 2026' },
     start: '2025-04',
     end: '2026-09',
@@ -135,10 +135,6 @@ export const experiences: Experience[] = [
         en: 'YH Trading: trade tracking and statistics.',
         fr: 'YH Trading : suivi des trades et des statistiques.',
       },
-      {
-        en: 'ghostnet_socket, a side project published in 2026.',
-        fr: 'ghostnet_socket, un side project publié en 2026.',
-      },
     ],
     tags: ['Next.js', 'React', 'TypeScript', 'Supabase'],
   },
@@ -159,6 +155,20 @@ export type Project = {
 }
 
 export const projects: Project[] = [
+  {
+    id: 'impulse-lab',
+    name: { en: 'Impulse Lab', fr: 'Impulse Lab' },
+    description: {
+      en: 'Impulse Lab’s website. I ship the entire internal back office, so the team runs everything from the same site.',
+      fr: 'Le site d’Impulse Lab. Je ship l’intégralité du back-office interne, pour que l’équipe gère tout depuis le même site.',
+    },
+    tech: ['Next.js', 'Vercel', 'oRPC', 'AlignUI'],
+    year: '2026',
+    url: 'https://impulselab.ai',
+    github: "https://github.com/impulse-studio",
+    status: 'live',
+    image: '/projects/impulse.jpg',
+  },
   {
     id: 'altiora',
     name: { en: 'Altiora', fr: 'Altiora' },
@@ -188,124 +198,32 @@ export const projects: Project[] = [
     image: '/projects/bkm.jpg',
   },
   {
-    id: 'pmp-admin',
-    name: { en: 'PMP Admin V3', fr: 'PMP Admin V3' },
+    id: 'altiora-discord-bot',
+    name: { en: 'Altiora Discord Bot (oss version)', fr: 'Altiora Discord Bot (oss version)' },
     description: {
-      en: 'Internal management back office, rebuilt during the apprenticeship.',
-      fr: 'Back-office interne de gestion, refait pendant l’alternance.',
+      en: 'Open source community edition of Altiora’s Discord bot: deepwork voice sessions and role sync over webhooks.',
+      fr: 'Édition communautaire open source du bot Discord d’Altiora : sessions de deepwork en vocal et synchro des rôles par webhooks.',
     },
-    tech: ['React', 'Express', 'Prisma', 'MySQL'],
-    year: '2025',
-    url: null,
-    github: null,
-    status: 'internal',
-  },
-  {
-    id: 'ata',
-    name: { en: 'ATA', fr: 'ATA' },
-    description: {
-      en: 'Altiora Trading API, a backend for trading autojournaling. Stopped because of MetaAPI and infra costs.',
-      fr: 'Altiora Trading API, un backend d’autojournaling trading. Arrêté à cause des coûts MetaAPI et infra.',
-    },
-    tech: ['TypeScript', 'Drizzle', 'Bun', 'MetaAPI'],
-    year: '2025',
-    url: null,
-    github: 'https://github.com/AltioraPro/ATA',
-    status: 'archived',
-  },
-  {
-    id: 'ghostnet',
-    name: { en: 'ghostnet_socket', fr: 'ghostnet_socket' },
-    description: {
-      en: 'Side project published on GitHub in 2026.',
-      fr: 'Side project publié sur GitHub en 2026.',
-    },
-    tech: ['TypeScript'],
+    tech: ['TypeScript', 'discord.js', 'Bun', 'oRPC'],
     year: '2026',
     url: null,
-    github: 'https://github.com/17Sx/ghostnet_socket',
+    github: 'https://github.com/AltioraPro/discord-bot-oss',
     status: 'live',
   },
 ]
 
-export type SkillGroup = {
-  id: string
-  label: Copy
-  items: { name: string; icon?: string }[]
-}
+export type Tool = { id: string; name: string; icon: string }
 
-export const skillGroups: SkillGroup[] = [
-  {
-    id: 'languages',
-    label: { en: 'Languages', fr: 'Langages' },
-    items: [
-      { name: 'JavaScript', icon: 'logos:javascript' },
-      { name: 'TypeScript', icon: 'logos:typescript-icon' },
-      { name: 'Python', icon: 'logos:python' },
-      { name: 'SQL', icon: 'mdi:database' },
-    ],
-  },
-  {
-    id: 'frontend',
-    label: { en: 'Frontend', fr: 'Frontend' },
-    items: [
-      { name: 'React', icon: 'logos:react' },
-      { name: 'Next.js', icon: 'logos:nextjs-icon' },
-      { name: 'Tailwind CSS', icon: 'logos:tailwindcss-icon' },
-      { name: 'TanStack Query', icon: 'logos:react-query-icon' },
-      { name: 'React Email', icon: 'logos:react' },
-    ],
-  },
-  {
-    id: 'backend',
-    label: { en: 'Backend', fr: 'Backend' },
-    items: [
-      { name: 'Node.js', icon: 'logos:nodejs-icon' },
-      { name: 'Express', icon: 'simple-icons:express' },
-      { name: 'oRPC', icon: 'mdi:api' },
-      { name: 'tRPC', icon: 'logos:trpc' },
-      { name: 'Better Auth', icon: 'mdi:lock-outline' },
-    ],
-  },
-  {
-    id: 'data',
-    label: { en: 'Data', fr: 'Données' },
-    items: [
-      { name: 'PostgreSQL', icon: 'logos:postgresql' },
-      { name: 'Drizzle', icon: 'simple-icons:drizzle' },
-      { name: 'Neon', icon: 'logos:neon-icon' },
-    ],
-  },
-  {
-    id: 'ml',
-    label: { en: 'ML & Vision', fr: 'ML & Vision' },
-    items: [
-      { name: 'PyTorch', icon: 'logos:pytorch-icon' },
-      { name: 'PaddleOCR', icon: 'mdi:ocr' },
-      { name: 'pdfplumber', icon: 'mdi:file-pdf-box' },
-      { name: 'ONNX', icon: 'simple-icons:onnx' },
-    ],
-  },
-  {
-    id: 'infra',
-    label: { en: 'Infra', fr: 'Infra' },
-    items: [
-      { name: 'Docker', icon: 'logos:docker-icon' },
-      { name: 'Linux', icon: 'logos:linux-tux' },
-      { name: 'Ubuntu', icon: 'logos:ubuntu' },
-      { name: 'GitHub', icon: 'logos:github-icon' },
-      { name: 'GitHub Actions', icon: 'logos:github-actions' },
-      { name: 'Vercel', icon: 'logos:vercel-icon' },
-    ],
-  },
-  {
-    id: 'software',
-    label: { en: 'Software', fr: 'Logiciels' },
-    items: [
-      { name: 'Cursor', icon: 'simple-icons:cursor' },
-      { name: 'Postman', icon: 'logos:postman-icon' },
-    ],
-  },
+/** Outils de la phrase Stack : chaque `id` correspond à un `{id}` dans t.skills.sentence */
+export const shipStack: Tool[] = [
+  { id: 'next', name: 'Next.js', icon: 'logos:nextjs-icon' },
+  { id: 'tailwind', name: 'Tailwind CSS', icon: 'logos:tailwindcss-icon' },
+  { id: 'shadcn', name: 'shadcn/ui', icon: 'simple-icons:shadcnui' },
+  { id: 'postgres', name: 'PostgreSQL', icon: 'logos:postgresql' },
+  { id: 'neon', name: 'Neon', icon: 'logos:neon-icon' },
+  { id: 'drizzle', name: 'Drizzle', icon: 'simple-icons:drizzle' },
+  { id: 'trpc', name: 'tRPC', icon: 'logos:trpc' },
+  { id: 'cursor', name: 'Cursor', icon: 'simple-icons:cursor' },
 ]
 
 export function resumeHref(lang: Lang) {

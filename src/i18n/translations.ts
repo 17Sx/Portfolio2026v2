@@ -20,14 +20,14 @@ export const experienceEntries: ExperienceEntry[] = [
   {
     id: 'impulse-lab',
     company: { en: 'Impulse Lab', fr: 'Impulse Lab' },
-    role: { en: 'Web developer · Apprenticeship', fr: 'Développeur web · Alternance' },
+    role: { en: 'Software Engineer · Apprenticeship', fr: 'Ingénieur logiciel · Alternance' },
     period: { en: 'Sep 2026 - Present', fr: 'Sep 2026 - Présent' },
     url: 'https://impulselab.ai',
   },
   {
     id: 'altiora',
     company: { en: 'Altiora', fr: 'Altiora' },
-    role: { en: 'Founder & developer', fr: 'Fondateur développeur' },
+    role: { en: 'Founder & Software Engineer', fr: 'Fondateur & ingénieur logiciel' },
     period: { en: 'May 2025 - Present', fr: 'Mai 2025 - Présent' },
     url: 'https://altiora.pro',
   },
@@ -37,7 +37,7 @@ export const experienceEntries: ExperienceEntry[] = [
       en: 'PALM MANAGING PROJECT',
       fr: 'PALM MANAGING PROJECT',
     },
-    role: { en: 'Web developer · Apprenticeship', fr: 'Développeur web · Alternance' },
+    role: { en: 'Software Engineer · Apprenticeship', fr: 'Ingénieur logiciel · Alternance' },
     period: { en: 'Apr 2025 - Sep 2026', fr: 'Avr 2025 - Sep 2026' },
     url: null,
   },
@@ -63,12 +63,6 @@ export const projectItems: ListedItem[] = [
     en: 'YH Trading (2025)',
     fr: 'YH Trading (2025)',
     url: 'https://yhtrading.vercel.app',
-  },
-  {
-    id: 'ghostnet',
-    en: 'ghostnet_socket (2026)',
-    fr: 'ghostnet_socket (2026)',
-    url: 'https://github.com/17Sx/ghostnet_socket',
   },
 ]
 
@@ -126,7 +120,7 @@ export const copy = {
       lead: 'Software engineer. I build products that ship: custom apps, AI integrations, and software I can stand behind.',
       bullets: [
         '**Entrepreneurship and code** are the two things I keep trying to hold together. I want to make a living from what I love.',
-        'Day to day I’m a web developer at **Impulse Lab**: interfaces that feel fast, schemas that stay honest, and code that actually reaches production.',
+        'Day to day I’m a software engineer at **Impulse Lab**.',
         'On the side I founded **Altiora**, and I take freelance work when the problem is worth building.',
       ],
       email: 'Send an email',
@@ -163,14 +157,14 @@ export const copy = {
     },
     skills: {
       section: 'Stack',
-      intro: 'Next.js and Tailwind up front. PostgreSQL on Neon, Drizzle as the ORM. Cursor to ship.',
+      sentence:
+        'Most of what I build runs on {next}, styled with {tailwind} and {shadcn}. Data lives in {postgres} on {neon}, queried through {drizzle}, while {trpc} keeps the types in sync from the database to the UI. All of it gets written in {cursor}.',
     },
     music: {
       section: 'Music',
-      intro: 'Most played on Deezer',
+      intro: 'Top 3 artists on Deezer',
       loading: 'Loading listening stats',
       failed: 'Listening stats unavailable.',
-      more: '+{count} more',
       onRepeat: 'On repeat',
     },
     github: {
@@ -220,7 +214,7 @@ export const copy = {
       lead: 'Ingénieur logiciel. Je construis des produits qui partent en prod : apps sur mesure, intégrations IA, et du logiciel que je peux assumer.',
       bullets: [
         '**L’entrepreneuriat et le code**, les deux choses que j’essaie de tenir ensemble. Je veux vivre de ce que j’aime.',
-        'Au quotidien, développeur web chez **Impulse Lab** : des interfaces qui réagissent vite, des schémas honnêtes, et du code qui finit vraiment en production.',
+        'Au quotidien, je suis ingénieur logiciel chez **Impulse Lab**.',
         'À côté, j’ai fondé **Altiora**, et je prends des missions freelance quand le problème vaut le coup.',
       ],
       email: 'Envoyer un email',
@@ -257,14 +251,14 @@ export const copy = {
     },
     skills: {
       section: 'Stack',
-      intro: 'Next.js et Tailwind devant. PostgreSQL sur Neon, Drizzle en ORM. Cursor pour livrer.',
+      sentence:
+        'La plupart de ce que je construis tourne sur {next}, stylé avec {tailwind} et {shadcn}. Les données vivent dans {postgres} sur {neon}, interrogées via {drizzle}, pendant que {trpc} garde les types alignés de la base jusqu’à l’interface. Le tout s’écrit dans {cursor}.',
     },
     music: {
       section: 'Musique',
-      intro: 'Les plus écoutés sur Deezer',
+      intro: 'Top 3 artistes sur Deezer',
       loading: 'Chargement des écoutes',
       failed: 'Statistiques d’écoute indisponibles.',
-      more: '+{count} de plus',
       onRepeat: 'En boucle',
     },
     github: {

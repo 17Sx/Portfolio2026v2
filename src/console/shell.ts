@@ -1,6 +1,6 @@
 import { version as reactVersion } from 'react'
 import { SOCIAL } from '../constants/social.ts'
-import { experiences, isSectionId, projects, resumeHref, SECTION_IDS, skillGroups, type Copy } from '../content/work.ts'
+import { experiences, isSectionId, projects, resumeHref, SECTION_IDS, shipStack, type Copy } from '../content/work.ts'
 import type { DeezerMusic } from '../hooks/useDeezer.ts'
 import { SECTION_EVENT } from '../hooks/useSectionJump.ts'
 import { getTheme, setTheme } from '../hooks/useTheme.ts'
@@ -133,9 +133,8 @@ function projectsCommand() {
 }
 
 function stack() {
-  for (const group of skillGroups) {
-    line([t(group.label).padEnd(12), S.key], [group.items.map((item) => item.name).join(' · '), S.none])
-  }
+  const sentence = copy[currentLang()].skills.sentence
+  line([sentence.replace(/\{(\w+)\}/g, (match, id: string) => shipStack.find((tool) => tool.id === id)?.name ?? match), S.none])
 }
 
 function music() {
@@ -255,7 +254,7 @@ function boot(art: string | null) {
     () => ok(`react ${reactVersion} · vite · tailwind`),
     () =>
       ok(
-        `${experiences.length} ${t({ en: 'experiences', fr: 'expériences' })} · ${projects.length} ${t({ en: 'projects', fr: 'projets' })} · ${skillGroups.length} ${t({ en: 'skill groups', fr: 'groupes de compétences' })}`,
+        `${experiences.length} ${t({ en: 'experiences', fr: 'expériences' })} · ${projects.length} ${t({ en: 'projects', fr: 'projets' })}`,
       ),
     () => ok(`1 ${t({ en: 'human found', fr: 'humain trouvé' })}: Noa (@17Sx)`),
     () => prompt(t({ en: 'type sx.help() to start', fr: 'tape sx.help() pour commencer' })),
