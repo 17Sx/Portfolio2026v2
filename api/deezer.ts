@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 
 // Profil Deezer public de Noa ; surchargeable par DEEZER_USER_ID pour un fork
 const USER_ID = process.env.DEEZER_USER_ID || '1809986862'
-const ARTIST_LIMIT = 15
+const ARTIST_LIMIT = 3
 const TIMEOUT_MS = 5000
 const PICTURE_HOST = 'https://cdn-images.dzcdn.net/'
 

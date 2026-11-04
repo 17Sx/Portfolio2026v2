@@ -32,7 +32,7 @@ export function MusicSection() {
         <div aria-hidden>
           <div className="flex flex-wrap gap-1.5">
             {/* Autant de puces que d'artistes renvoyés par api/deezer.ts (ARTIST_LIMIT) */}
-            {[96, 140, 84, 120, 108, 132, 92, 124, 140, 88, 128, 112, 150, 100, 118].map((width, index) => (
+            {[96, 140, 84].map((width, index) => (
               <span
                 key={index}
                 className="h-[30px] animate-pulse rounded-full bg-zinc-100 motion-reduce:animate-none dark:bg-zinc-900"
@@ -68,11 +68,6 @@ export function MusicSection() {
               {artist.name}
             </a>
           ))}
-          {music.moreCount > 0 ? (
-            <span className="px-1 font-mono text-[11px] text-zinc-400">
-              {t.music.more.replace('{count}', String(music.moreCount))}
-            </span>
-          ) : null}
         </div>
       ) : null}
 
