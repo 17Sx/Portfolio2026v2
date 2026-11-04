@@ -37,9 +37,10 @@ export function IndexNav() {
                     : 'text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200'
                 }`}
               >
-                <span aria-hidden className={isActive ? 'opacity-100' : 'opacity-0'}>
-                  —
-                </span>
+                <span
+                  aria-hidden
+                  className={`h-px w-3 bg-current ${isActive ? 'opacity-100' : 'opacity-0'}`}
+                />
                 <span>{t.index[key]}</span>
               </button>
             </li>

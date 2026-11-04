@@ -115,7 +115,7 @@ function experience() {
       [t({ en: 'company', fr: 'entreprise' })]: t(entry.company),
       [t({ en: 'role', fr: 'poste' })]: t(entry.role),
       [t({ en: 'period', fr: 'période' })]: t(entry.period),
-      url: entry.url ?? '—',
+      url: entry.url ?? '-',
     })),
   )
 }
@@ -127,7 +127,7 @@ function projectsCommand() {
       [t({ en: 'project', fr: 'projet' })]: t(project.name),
       [t({ en: 'year', fr: 'année' })]: project.year,
       [t({ en: 'status', fr: 'statut' })]: status[project.status],
-      [t({ en: 'link', fr: 'lien' })]: project.url ?? project.github ?? '—',
+      [t({ en: 'link', fr: 'lien' })]: project.url ?? project.github ?? '-',
     })),
   )
 }
@@ -150,7 +150,7 @@ function music() {
       }
       console.table(data.artists.map((artist) => ({ artist: artist.name, link: artist.link })))
       if (data.onRepeat) {
-        line([t({ en: 'on repeat: ', fr: 'en boucle : ' }), S.dim], [`${data.onRepeat.title} — ${data.onRepeat.artist}`, S.none])
+        line([t({ en: 'on repeat: ', fr: 'en boucle : ' }), S.dim], [`${data.onRepeat.title} - ${data.onRepeat.artist}`, S.none])
       }
     })
     .catch(() => {

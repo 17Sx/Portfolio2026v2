@@ -44,7 +44,7 @@ export const experienceEntries: ExperienceEntry[] = [
   {
     id: 'freelance',
     company: { en: 'Freelance', fr: 'Freelance' },
-    role: { en: 'Full-stack developer', fr: 'Développeur full-stack' },
+    role: { en: 'Software Engineer', fr: 'Ingénieur logiciel' },
     period: { en: '2023 - Present', fr: '2023 - Présent' },
     url: null,
   },
@@ -120,10 +120,10 @@ export const copy = {
   en: {
     nav: { name: 'Noa' },
     profile: {
-      role: 'Full-stack developer',
+      role: 'Software Engineer',
     },
     about: {
-      lead: 'Full-stack developer. I build products that ship — custom apps, AI integrations, and software I can stand behind.',
+      lead: 'Software engineer. I build products that ship: custom apps, AI integrations, and software I can stand behind.',
       bullets: [
         '**Entrepreneurship and code** are the two things I keep trying to hold together. I want to make a living from what I love.',
         'Day to day I’m a web developer at **Impulse Lab**: interfaces that feel fast, schemas that stay honest, and code that actually reaches production.',
@@ -214,10 +214,10 @@ export const copy = {
   fr: {
     nav: { name: 'Noa' },
     profile: {
-      role: 'Développeur full-stack',
+      role: 'Ingénieur logiciel',
     },
     about: {
-      lead: 'Développeur full-stack. Je construis des produits qui partent en prod — apps sur mesure, intégrations IA, et du logiciel que je peux assumer.',
+      lead: 'Ingénieur logiciel. Je construis des produits qui partent en prod : apps sur mesure, intégrations IA, et du logiciel que je peux assumer.',
       bullets: [
         '**L’entrepreneuriat et le code**, les deux choses que j’essaie de tenir ensemble. Je veux vivre de ce que j’aime.',
         'Au quotidien, développeur web chez **Impulse Lab** : des interfaces qui réagissent vite, des schémas honnêtes, et du code qui finit vraiment en production.',

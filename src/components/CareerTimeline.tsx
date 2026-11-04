@@ -57,7 +57,7 @@ export function CareerTimeline() {
             </span>
           </div>
           <span className="shrink-0 pt-0.5 font-mono text-[10px] font-medium tracking-[0.12em] text-zinc-500 uppercase sm:text-[11px]">
-            {firstYear}—{t.experience.present}
+            {firstYear} - {t.experience.present}
           </span>
         </div>
 
