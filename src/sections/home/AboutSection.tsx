@@ -22,7 +22,7 @@ export function AboutSection() {
               •
             </span>
             <span>
-              <Rich text={bullet} />
+              <Rich text={bullet} previews />
             </span>
           </li>
         ))}
