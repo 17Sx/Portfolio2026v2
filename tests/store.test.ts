@@ -12,7 +12,7 @@ describe.skipIf(!url)('Postgres store', () => {
   const NOW = Date.UTC(2026, 9, 20, 12)
 
   beforeAll(async () => {
-    await admin`drop table if exists stats_counters, stats_visitors, stats_live, stats_feed`
+    await admin`drop table if exists stats_counters, stats_visitors, stats_live, stats_feed, stats_login_attempts, stats_passkeys`
     process.env.DATABASE_URL = url
     store = await import('../api/_lib/store.ts')
   })
@@ -73,5 +73,35 @@ describe.skipIf(!url)('Postgres store', () => {
     expect(feed[0]).toMatchObject({ ts: 104, path: '/104' })
     const [{ count }] = await admin<{ count: string }[]>`select count(*) as count from stats_feed`
     expect(Number(count)).toBe(100)
+  })
+
+  it('counts login attempts like nextAttempt(), atomically under a parallel burst', async () => {
+    const { nextAttempt } = await import('../api/_lib/login-guard.ts')
+    const policy = { max: 5, windowMs: 60_000, lockMs: 120_000 }
+
+    const burst = await Promise.all(Array.from({ length: 20 }, () => store.registerLoginAttempt('ip:burst', NOW, policy)))
+    expect(burst.filter((row) => row.lockedUntil <= NOW)).toHaveLength(policy.max)
+
+    // Same sequence through SQL and through the in-memory rules
+    let expected: ReturnType<typeof nextAttempt> | undefined
+    for (const at of [0, 10, 20, 30, 40, 50, 60, 130_000, 200_000]) {
+      expected = nextAttempt(expected, NOW + at, policy)
+      expect(await store.registerLoginAttempt('ip:seq', NOW + at, policy)).toEqual(expected)
+    }
+
+    await store.clearLoginAttempts('ip:seq')
+    expect(await store.registerLoginAttempt('ip:seq', NOW, policy)).toEqual({ fails: 1, windowStart: NOW, lockedUntil: 0 })
+  })
+
+  it('stores passkeys and updates their counter', async () => {
+    await store.insertPasskey({ id: 'cred-a', publicKey: 'pk-a', counter: 0, transports: ['internal', 'hybrid'], createdAt: NOW })
+    await store.insertPasskey({ id: 'cred-b', publicKey: 'pk-b', counter: 3, transports: [], createdAt: NOW + 1 })
+    await expect(store.insertPasskey({ id: 'cred-a', publicKey: 'x', counter: 0, transports: [], createdAt: NOW })).rejects.toThrow()
+
+    await store.touchPasskey('cred-b', 7, NOW + 2)
+    expect(await store.listPasskeys()).toEqual([
+      { id: 'cred-a', publicKey: 'pk-a', counter: 0, transports: ['internal', 'hybrid'], createdAt: NOW },
+      { id: 'cred-b', publicKey: 'pk-b', counter: 7, transports: [], createdAt: NOW + 1 },
+    ])
   })
 })

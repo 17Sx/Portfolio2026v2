@@ -3,6 +3,7 @@ import { STATS_RANGES, type StatsRange, type StatsResponse } from '../../shared/
 import { ArrowLeftIcon, MoonIcon, SunIcon } from '../components/icons.tsx'
 import { useTheme } from '../hooks/useTheme.ts'
 import { Histogram, PunchCard, TrafficChart, WorldMap } from './charts.tsx'
+import { PasskeyGate } from './PasskeyGate.tsx'
 import { countryName, flag, formatDuration, formatNumber, formatPercent, histogramCounts, sorted, sum } from './format.ts'
 import { BarList, Empty, Kpi, LiveFeed, Panel, SplitBar, VitalCard } from './panels.tsx'
 import { useStats } from './useStats.ts'
@@ -203,8 +204,15 @@ function Skeleton() {
 
 export default function StatsApp() {
   const [range, setRange] = useState<StatsRange>('30d')
-  const state = useStats(range)
+  const [session, setSession] = useState(0)
+  const state = useStats(range, session)
   const { theme, toggle } = useTheme()
+  const locked = state.status === 'locked'
+
+  async function logout() {
+    await fetch('/api/stats-auth', { method: 'DELETE' }).catch(() => {})
+    setSession((n) => n + 1)
+  }
 
   useEffect(() => {
     document.title = 'stats · 17sx.me'
@@ -235,18 +243,31 @@ export default function StatsApp() {
               </p>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={toggle}
-            aria-label="Toggle theme"
-            aria-pressed={theme === 'dark'}
-            className="flex size-7 items-center justify-center text-zinc-500 transition hover:text-zinc-900 dark:hover:text-zinc-200"
-          >
-            {theme === 'dark' ? <SunIcon className="size-[18px]" /> : <MoonIcon className="size-[18px]" />}
-          </button>
+          <div className="flex items-center gap-3">
+            {locked ? null : (
+              <button
+                type="button"
+                onClick={logout}
+                className="font-mono text-[11px] tracking-widest text-zinc-500 uppercase transition hover:text-zinc-900 dark:hover:text-zinc-200"
+              >
+                Log out
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={toggle}
+              aria-label="Toggle theme"
+              aria-pressed={theme === 'dark'}
+              className="flex size-7 items-center justify-center text-zinc-500 transition hover:text-zinc-900 dark:hover:text-zinc-200"
+            >
+              {theme === 'dark' ? <SunIcon className="size-[18px]" /> : <MoonIcon className="size-[18px]" />}
+            </button>
+          </div>
         </header>
 
-        <nav aria-label="Range" className="flex flex-wrap gap-x-1 gap-y-2 border-b border-zinc-200 dark:border-zinc-800 pb-3">
+        {locked ? <PasskeyGate onSuccess={() => setSession((n) => n + 1)} /> : null}
+
+        <nav aria-label="Range" hidden={locked} className="flex flex-wrap gap-x-1 gap-y-2 border-b border-zinc-200 dark:border-zinc-800 pb-3">
           {STATS_RANGES.map((r) => (
             <button
               key={r}
@@ -272,7 +293,7 @@ export default function StatsApp() {
           </p>
         )}
 
-        <main className={state.status === 'loading' && state.data ? 'opacity-50 transition-opacity' : 'transition-opacity'}>
+        <main hidden={locked} className={state.status === 'loading' && state.data ? 'opacity-50 transition-opacity' : 'transition-opacity'}>
           {state.data ? <Dashboard data={state.data} range={state.data.range} /> : state.status === 'loading' ? <Skeleton /> : null}
         </main>
 

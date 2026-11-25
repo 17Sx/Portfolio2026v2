@@ -50,6 +50,22 @@ function ready(): Promise<void> {
       await sql`create table if not exists stats_live (sid text primary key, seen_at bigint not null)`
       await sql`create index if not exists stats_live_seen_at on stats_live (seen_at)`
       await sql`create table if not exists stats_feed (id bigserial primary key, entry jsonb not null)`
+      await sql`
+        create table if not exists stats_login_attempts (
+          key text primary key,
+          fails integer not null,
+          window_start bigint not null,
+          locked_until bigint not null default 0
+        )`
+      await sql`
+        create table if not exists stats_passkeys (
+          id text primary key,
+          public_key text not null,
+          counter bigint not null,
+          transports text not null default '',
+          created_at bigint not null,
+          last_used_at bigint
+        )`
     })
     .then(
       () => undefined,
@@ -144,4 +160,73 @@ export async function readLive(now: number, feedSize: number): Promise<{ live: n
     sql<{ entry: unknown }[]>`select entry from stats_feed order by id desc limit ${feedSize}`,
   ])
   return { live: Number(count?.count ?? 0), feed: feed.map((r) => r.entry) }
+}
+
+export type AttemptPolicy = { max: number; windowMs: number; lockMs: number }
+export type AttemptRow = { fails: number; windowStart: number; lockedUntil: number }
+
+/**
+ * Counts one login attempt for `key` in a single atomic upsert and returns the updated row.
+ * Mirrors nextAttempt() in login-guard.ts: a locked key stays as is, an expired window starts over,
+ * and going past `max` inside the window locks the key for `lockMs`.
+ */
+export async function registerLoginAttempt(key: string, now: number, policy: AttemptPolicy): Promise<AttemptRow> {
+  await ready()
+  const { max, windowMs, lockMs } = policy
+  const [row] = await db()<{ fails: number; window_start: string; locked_until: string }[]>`
+    insert into stats_login_attempts as t (key, fails, window_start, locked_until)
+    values (${key}, 1, ${now}, ${max < 1 ? now + lockMs : 0})
+    on conflict (key) do update set
+      fails = case
+        when t.locked_until > ${now} then t.fails
+        when t.window_start + ${windowMs} <= ${now} then 1
+        else t.fails + 1 end,
+      window_start = case
+        when t.locked_until > ${now} then t.window_start
+        when t.window_start + ${windowMs} <= ${now} then ${now}
+        else t.window_start end,
+      locked_until = case
+        when t.locked_until > ${now} then t.locked_until
+        when t.window_start + ${windowMs} > ${now} and t.fails + 1 > ${max} then ${now + lockMs}
+        else t.locked_until end
+    returning fails, window_start, locked_until`
+  return { fails: row.fails, windowStart: Number(row.window_start), lockedUntil: Number(row.locked_until) }
+}
+
+export async function clearLoginAttempts(key: string): Promise<void> {
+  await ready()
+  await db()`delete from stats_login_attempts where key = ${key}`
+}
+
+/** A registered passkey; the public key is stored base64url-encoded. */
+export type StoredPasskey = { id: string; publicKey: string; counter: number; transports: string[]; createdAt: number }
+
+type PasskeyRow = { id: string; public_key: string; counter: string; transports: string; created_at: string }
+
+function toPasskey(row: PasskeyRow): StoredPasskey {
+  return {
+    id: row.id,
+    publicKey: row.public_key,
+    counter: Number(row.counter),
+    transports: row.transports ? row.transports.split(',') : [],
+    createdAt: Number(row.created_at),
+  }
+}
+
+export async function listPasskeys(): Promise<StoredPasskey[]> {
+  await ready()
+  const rows = await db()<PasskeyRow[]>`select id, public_key, counter, transports, created_at from stats_passkeys order by created_at`
+  return rows.map(toPasskey)
+}
+
+export async function insertPasskey(passkey: StoredPasskey): Promise<void> {
+  await ready()
+  await db()`
+    insert into stats_passkeys (id, public_key, counter, transports, created_at)
+    values (${passkey.id}, ${passkey.publicKey}, ${passkey.counter}, ${passkey.transports.join(',')}, ${passkey.createdAt})`
+}
+
+export async function touchPasskey(id: string, counter: number, now: number): Promise<void> {
+  await ready()
+  await db()`update stats_passkeys set counter = ${counter}, last_used_at = ${now} where id = ${id}`
 }

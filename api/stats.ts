@@ -7,6 +7,7 @@ import {
   type StatsRange,
   type StatsResponse,
 } from '../shared/stats-schema.js'
+import { authConfigured, isAuthorized } from './_lib/auth.js'
 import type { ApiRequest, ApiResponse } from './_lib/http.js'
 import { lastDays, lastMonths, scopes } from './_lib/schema.js'
 import { readCounters, readLive, readMonths, readUniques, storeConfigured } from './_lib/store.js'
@@ -87,26 +88,34 @@ async function stats(range: StatsRange, now: number): Promise<StatsResponse> {
 }
 
 export default async function handler(req: ApiRequest, res: ApiResponse) {
+  // Per-session data: never cached by the CDN, or one visitor's authenticated response would reach the next one.
+  res.setHeader('Cache-Control', 'private, no-store')
+  const now = Date.now()
+
+  // Fails closed: without STATS_SETUP_TOKEN nobody can read the stats.
+  if (!authConfigured()) {
+    res.status(503).json({ error: 'auth not configured' })
+    return
+  }
+  if (!isAuthorized(req, now)) {
+    res.status(401).json({ error: 'unauthorized' })
+    return
+  }
   if (!storeConfigured()) {
-    res.setHeader('Cache-Control', 'no-store')
     res.status(503).json({ error: 'storage not configured' })
     return
   }
 
   const range = req.query.range
-  const now = Date.now()
   try {
     if (range === 'live') {
-      res.setHeader('Cache-Control', 'public, s-maxage=5, stale-while-revalidate=10')
       res.json(await live(now))
       return
     }
     const selected = isRange(range) ? range : '30d'
-    res.setHeader('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=60')
     res.json(await stats(selected, now))
   } catch (error) {
     console.error('[stats]', error)
-    res.setHeader('Cache-Control', 'no-store')
     res.status(502).json({ error: 'storage unavailable' })
   }
 }
