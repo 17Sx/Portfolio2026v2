@@ -115,9 +115,9 @@ function Dashboard({ data, range }: { data: StatsResponse; range: StatsRange }) 
         <Panel title="Outbound clicks">
           <BarList rows={rows(f.out)} />
         </Panel>
-        <Panel title="UTM campaigns" hint="utm_source / utm_medium / utm_campaign">
+        <Panel title="Campaigns" hint="?ref= or utm_source / utm_medium / utm_campaign">
           {sum(f.usrc) + sum(f.ucamp) === 0 ? (
-            <Empty>No tagged link yet. Share 17sx.me/?utm_source=linkedin to see it here.</Empty>
+            <Empty>No tagged link yet. Share 17sx.me/?ref=linkedin to see it here.</Empty>
           ) : (
             <BarList
               rows={[

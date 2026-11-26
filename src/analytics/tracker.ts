@@ -1,3 +1,4 @@
+import { campaignFromSearch } from '../../shared/campaign.ts'
 import type { CollectEvent, SessionContext } from '../../shared/stats-schema.ts'
 
 // Cookie-free tracker: a random per-tab session id (sessionStorage) and the
@@ -59,7 +60,6 @@ function sessionContext(): SessionContext {
   const last = Number(local?.getItem(LAST_VISIT_KEY)) || null
   local?.setItem(LAST_VISIT_KEY, String(Date.now()))
 
-  const params = new URLSearchParams(location.search)
   const mem = 'deviceMemory' in navigator && typeof navigator.deviceMemory === 'number' ? navigator.deviceMemory : null
   const connection = 'connection' in navigator ? navigator.connection : null
   const net =
@@ -84,11 +84,7 @@ function sessionContext(): SessionContext {
     reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
     visitor: last ? 'returning' : 'new',
     gap: last ? Math.floor((Date.now() - last) / DAY_MS) : null,
-    utm: {
-      source: params.get('utm_source') ?? undefined,
-      medium: params.get('utm_medium') ?? undefined,
-      campaign: params.get('utm_campaign') ?? undefined,
-    },
+    utm: campaignFromSearch(location.search),
     referrer: document.referrer,
   }
 }
